@@ -1,0 +1,22 @@
+schema_version: "1.0"
+questions:
+  - id: process_command_line
+    question: "Can we identify the exact process command line?"
+    required_sources: [sysmon_process_create]
+    required_fields: [Image, CommandLine, ProcessId, ProcessGuid]
+  - id: parent_child_process
+    question: "Can we reconstruct parent-child process relationships?"
+    required_sources: [sysmon_process_create]
+    required_fields: [ProcessGuid, ParentProcessGuid, ParentImage, ParentProcessId]
+  - id: powershell_script_content
+    question: "Can we inspect PowerShell script block content?"
+    required_sources: [powershell_script_block]
+    required_fields: [ScriptBlockText, ScriptBlockId]
+  - id: logon_success_failure
+    question: "Can we distinguish successful and failed logons?"
+    required_sources: [windows_security_logon]
+    required_fields: [EventId, TargetUserName, LogonType, Status]
+  - id: user_to_process_context
+    question: "Can we connect a user context to process activity?"
+    required_sources: [sysmon_process_create, windows_security_logon]
+    required_fields: [User, LogonGuid, LogonId, TargetUserName, LogonType]

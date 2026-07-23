@@ -1,0 +1,7 @@
+﻿{
+    "valid":  true,
+    "reason":  "EXECUTABLE_IDENTITY_MATCH",
+    "expected_sha256":  "ABC123",
+    "observed_sha256":  "ABC123",
+    "image":  "powershell.exe"
+}

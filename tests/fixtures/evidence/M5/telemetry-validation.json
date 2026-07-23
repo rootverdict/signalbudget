@@ -1,0 +1,9 @@
+﻿{
+    "valid":  true,
+    "reason":  "TELEMETRY_COMPLETE",
+    "event":  {
+                  "event_id":  1,
+                  "provider":  "Microsoft-Windows-Sysmon",
+                  "record_id":  "M5"
+              }
+}

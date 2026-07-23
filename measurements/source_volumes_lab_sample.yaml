@@ -1,0 +1,38 @@
+schema_version: "1.0"
+volume_profiles:
+  - source_id: sysmon_process_create
+    measurement_status: "lab_24h_measurement"
+    measurement_window: "2026-07-20T04:41:19Z/2026-07-21T04:41:19Z"
+    measured_at_utc: "2026-07-21T04:41:19.5031925Z"
+    events_observed: 898
+    sample_events_exported: 100
+    sample_xml_bytes_observed: 215745
+    bytes_per_event_observed: 2157.45
+    estimated_events_per_day: 898
+    estimated_gb_per_day: 0.0019374
+    estimate_basis: "24-hour Get-WinEvent capture, 100-event XML sample for size. Measurement window includes DetFuzz test execution activity; not a pure idle baseline."
+    pricing_log_tier: "Analytics Logs"
+  - source_id: powershell_script_block
+    measurement_status: "lab_24h_measurement"
+    measurement_window: "2026-07-20T05:04:28Z/2026-07-21T05:04:28Z"
+    measured_at_utc: "2026-07-21T05:04:28.5289725Z"
+    events_observed: 9
+    sample_events_exported: 9
+    sample_xml_bytes_observed: 24700
+    bytes_per_event_observed: 2744.444444
+    estimated_events_per_day: 9
+    estimated_gb_per_day: 0.0000247
+    estimate_basis: "24-hour Get-WinEvent capture, 9-event XML sample for size. Measurement window includes DetFuzz test execution activity; not a pure idle baseline."
+    pricing_log_tier: "Analytics Logs"
+  - source_id: windows_security_logon
+    measurement_status: "lab_24h_measurement"
+    measurement_window: "2026-07-20T05:04:28Z/2026-07-21T05:04:28Z"
+    measured_at_utc: "2026-07-21T05:04:28.5289725Z"
+    events_observed: 208
+    sample_events_exported: 100
+    sample_xml_bytes_observed: 182928
+    bytes_per_event_observed: 1829.28
+    estimated_events_per_day: 208
+    estimated_gb_per_day: 0.00038049
+    estimate_basis: "24-hour Get-WinEvent capture, 100-event XML sample for size. Measurement window includes DetFuzz test execution activity; not a pure idle baseline."
+    pricing_log_tier: "Analytics Logs"

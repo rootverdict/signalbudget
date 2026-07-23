@@ -1,0 +1,544 @@
+{
+  "detfuzz_contract": {
+    "cases": [
+      {
+        "case_id": "B0",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "M1",
+        "classification": "VALID_BYPASS",
+        "detection_matched": false,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "M2",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "M3",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "M4",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "M5",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "NC1",
+        "classification": "INVALID_MUTANT",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      },
+      {
+        "case_id": "B1",
+        "classification": "DETECTED",
+        "detection_matched": true,
+        "executable_identity_valid": true,
+        "marker_valid": true,
+        "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+        "rule_slug": null,
+        "telemetry_valid": true
+      }
+    ],
+    "evidence_files_checked": 63,
+    "evidence_hashes_verified": true,
+    "evidence_manifest_file_count": 63,
+    "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+    "rule_slug": "detfuzz-v0-powershell-encoded-command",
+    "schema_version": "1.0",
+    "suite_id": "dc017824-0d4e-41d0-9d32-610b410accb0",
+    "suite_status": "COMPLETED",
+    "telemetry": "Microsoft-Windows-Sysmon/Operational",
+    "validated_rule_ids": [
+      "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62"
+    ]
+  },
+  "evidence_caveat": "Cost estimates are lab-derived from 24-hour VM measurements and are not production forecasts.",
+  "frontier_tradeoffs": [
+    {
+      "configuration_id": "none",
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "estimated_monthly_cost_usd": 0.0,
+      "estimated_monthly_proxy_cost_usd": 0.0,
+      "investigation_question_ready_count": 0,
+      "narrative": "Baseline: `none` costs $0.00000000/month as `XML_EXPORT_SIZE_PROXY`, with 0 validated detections and 0 investigation questions.",
+      "type": "baseline",
+      "validated_detection_count": 0
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        }
+      ],
+      "added_sources": [
+        "powershell_script_block"
+      ],
+      "cost_delta_usd": 0.0031863,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "none",
+      "from_estimated_monthly_cost_usd": 0.0,
+      "from_estimated_monthly_proxy_cost_usd": 0.0,
+      "lost_detections": [],
+      "lost_investigation_questions": [],
+      "narrative": "Moving from `none` to `powershell_script_block` changes cost by $0.00318630/month as `XML_EXPORT_SIZE_PROXY`, adds detections `powershell_script_block_encoded_activity`, loses detections none, adds questions `powershell_script_content`, and loses questions none.",
+      "removed_sources": [],
+      "to_configuration_id": "powershell_script_block",
+      "to_estimated_monthly_cost_usd": 0.0031863,
+      "to_estimated_monthly_proxy_cost_usd": 0.0031863,
+      "type": "transition"
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "windows_failed_logon_context",
+          "required_sources": [
+            "windows_security_logon"
+          ],
+          "slug": null,
+          "title": "Windows failed logon context",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "logon_success_failure",
+          "question": "Can we distinguish successful and failed logons?",
+          "required_sources": [
+            "windows_security_logon"
+          ]
+        }
+      ],
+      "added_sources": [
+        "windows_security_logon"
+      ],
+      "cost_delta_usd": 0.04908321,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "powershell_script_block",
+      "from_estimated_monthly_cost_usd": 0.0031863,
+      "from_estimated_monthly_proxy_cost_usd": 0.0031863,
+      "lost_detections": [],
+      "lost_investigation_questions": [],
+      "narrative": "Moving from `powershell_script_block` to `powershell_script_block+windows_security_logon` changes cost by $0.04908321/month as `XML_EXPORT_SIZE_PROXY`, adds detections `windows_failed_logon_context`, loses detections none, adds questions `logon_success_failure`, and loses questions none.",
+      "removed_sources": [],
+      "to_configuration_id": "powershell_script_block+windows_security_logon",
+      "to_estimated_monthly_cost_usd": 0.05226951,
+      "to_estimated_monthly_proxy_cost_usd": 0.05226951,
+      "type": "transition"
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "validated_by_detfuzz",
+          "id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+          "required_sources": [
+            "sysmon_process_create"
+          ],
+          "slug": "detfuzz-v0-powershell-encoded-command",
+          "title": "PowerShell EncodedCommand Process Creation",
+          "validated_by_detfuzz": true
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "process_command_line",
+          "question": "Can we identify the exact process command line?",
+          "required_sources": [
+            "sysmon_process_create"
+          ]
+        },
+        {
+          "id": "parent_child_process",
+          "question": "Can we reconstruct parent-child process relationships?",
+          "required_sources": [
+            "sysmon_process_create"
+          ]
+        }
+      ],
+      "added_sources": [
+        "sysmon_process_create"
+      ],
+      "cost_delta_usd": 0.19765509,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "powershell_script_block+windows_security_logon",
+      "from_estimated_monthly_cost_usd": 0.05226951,
+      "from_estimated_monthly_proxy_cost_usd": 0.05226951,
+      "lost_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        },
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "windows_failed_logon_context",
+          "required_sources": [
+            "windows_security_logon"
+          ],
+          "slug": null,
+          "title": "Windows failed logon context",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "lost_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        },
+        {
+          "id": "logon_success_failure",
+          "question": "Can we distinguish successful and failed logons?",
+          "required_sources": [
+            "windows_security_logon"
+          ]
+        }
+      ],
+      "narrative": "Moving from `powershell_script_block+windows_security_logon` to `sysmon_process_create` changes cost by $0.19765509/month as `XML_EXPORT_SIZE_PROXY`, adds detections `d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62`, loses detections `powershell_script_block_encoded_activity`, `windows_failed_logon_context`, adds questions `parent_child_process`, `process_command_line`, and loses questions `logon_success_failure`, `powershell_script_content`.",
+      "removed_sources": [
+        "powershell_script_block",
+        "windows_security_logon"
+      ],
+      "to_configuration_id": "sysmon_process_create",
+      "to_estimated_monthly_cost_usd": 0.2499246,
+      "to_estimated_monthly_proxy_cost_usd": 0.2499246,
+      "type": "transition"
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        }
+      ],
+      "added_sources": [
+        "powershell_script_block"
+      ],
+      "cost_delta_usd": 0.0031863,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "sysmon_process_create",
+      "from_estimated_monthly_cost_usd": 0.2499246,
+      "from_estimated_monthly_proxy_cost_usd": 0.2499246,
+      "lost_detections": [],
+      "lost_investigation_questions": [],
+      "narrative": "Moving from `sysmon_process_create` to `sysmon_process_create+powershell_script_block` changes cost by $0.00318630/month as `XML_EXPORT_SIZE_PROXY`, adds detections `powershell_script_block_encoded_activity`, loses detections none, adds questions `powershell_script_content`, and loses questions none.",
+      "removed_sources": [],
+      "to_configuration_id": "sysmon_process_create+powershell_script_block",
+      "to_estimated_monthly_cost_usd": 0.2531109,
+      "to_estimated_monthly_proxy_cost_usd": 0.2531109,
+      "type": "transition"
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "windows_failed_logon_context",
+          "required_sources": [
+            "windows_security_logon"
+          ],
+          "slug": null,
+          "title": "Windows failed logon context",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "logon_success_failure",
+          "question": "Can we distinguish successful and failed logons?",
+          "required_sources": [
+            "windows_security_logon"
+          ]
+        },
+        {
+          "id": "user_to_process_context",
+          "question": "Can we connect a user context to process activity?",
+          "required_sources": [
+            "sysmon_process_create",
+            "windows_security_logon"
+          ]
+        }
+      ],
+      "added_sources": [
+        "windows_security_logon"
+      ],
+      "cost_delta_usd": 0.04589691,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "sysmon_process_create+powershell_script_block",
+      "from_estimated_monthly_cost_usd": 0.2531109,
+      "from_estimated_monthly_proxy_cost_usd": 0.2531109,
+      "lost_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "lost_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        }
+      ],
+      "narrative": "Moving from `sysmon_process_create+powershell_script_block` to `sysmon_process_create+windows_security_logon` changes cost by $0.04589691/month as `XML_EXPORT_SIZE_PROXY`, adds detections `windows_failed_logon_context`, loses detections `powershell_script_block_encoded_activity`, adds questions `logon_success_failure`, `user_to_process_context`, and loses questions `powershell_script_content`.",
+      "removed_sources": [
+        "powershell_script_block"
+      ],
+      "to_configuration_id": "sysmon_process_create+windows_security_logon",
+      "to_estimated_monthly_cost_usd": 0.29900781,
+      "to_estimated_monthly_proxy_cost_usd": 0.29900781,
+      "type": "transition"
+    },
+    {
+      "added_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "added_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        }
+      ],
+      "added_sources": [
+        "powershell_script_block"
+      ],
+      "cost_delta_usd": 0.0031863,
+      "cost_estimate_kind": "XML_EXPORT_SIZE_PROXY",
+      "from_configuration_id": "sysmon_process_create+windows_security_logon",
+      "from_estimated_monthly_cost_usd": 0.29900781,
+      "from_estimated_monthly_proxy_cost_usd": 0.29900781,
+      "lost_detections": [],
+      "lost_investigation_questions": [],
+      "narrative": "Moving from `sysmon_process_create+windows_security_logon` to `sysmon_process_create+powershell_script_block+windows_security_logon` changes cost by $0.00318630/month as `XML_EXPORT_SIZE_PROXY`, adds detections `powershell_script_block_encoded_activity`, loses detections none, adds questions `powershell_script_content`, and loses questions none.",
+      "removed_sources": [],
+      "to_configuration_id": "sysmon_process_create+powershell_script_block+windows_security_logon",
+      "to_estimated_monthly_cost_usd": 0.30219411,
+      "to_estimated_monthly_proxy_cost_usd": 0.30219411,
+      "type": "transition"
+    }
+  ],
+  "pareto_summary": {
+    "complete_cost_configuration_count": 8,
+    "configuration_count": 8,
+    "dominated_configuration_ids": [
+      "windows_security_logon"
+    ],
+    "non_dominated_configuration_ids": [
+      "none",
+      "powershell_script_block",
+      "powershell_script_block+windows_security_logon",
+      "sysmon_process_create",
+      "sysmon_process_create+powershell_script_block",
+      "sysmon_process_create+windows_security_logon",
+      "sysmon_process_create+powershell_script_block+windows_security_logon"
+    ],
+    "partial_cost_configuration_count": 0
+  },
+  "pricing": {
+    "age_days": 0,
+    "fresh": true,
+    "max_age_days": 90,
+    "reason": "PRICING_WITHIN_MAX_AGE",
+    "retrieved_at": "2026-07-21T00:00:00Z",
+    "status": "PRICING_FRESH"
+  },
+  "pricing_status": "PRICING_FRESH",
+  "schema_version": "1.0",
+  "source_removal_losses": [
+    {
+      "lost_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "powershell_script_block_encoded_activity",
+          "required_sources": [
+            "powershell_script_block"
+          ],
+          "slug": null,
+          "title": "PowerShell encoded activity script content review",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "lost_investigation_questions": [
+        {
+          "id": "powershell_script_content",
+          "question": "Can we inspect PowerShell script block content?",
+          "required_sources": [
+            "powershell_script_block"
+          ]
+        }
+      ],
+      "removed_source": "powershell_script_block"
+    },
+    {
+      "lost_detections": [
+        {
+          "dependency_status": "validated_by_detfuzz",
+          "id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+          "required_sources": [
+            "sysmon_process_create"
+          ],
+          "slug": "detfuzz-v0-powershell-encoded-command",
+          "title": "PowerShell EncodedCommand Process Creation",
+          "validated_by_detfuzz": true
+        }
+      ],
+      "lost_investigation_questions": [
+        {
+          "id": "process_command_line",
+          "question": "Can we identify the exact process command line?",
+          "required_sources": [
+            "sysmon_process_create"
+          ]
+        },
+        {
+          "id": "parent_child_process",
+          "question": "Can we reconstruct parent-child process relationships?",
+          "required_sources": [
+            "sysmon_process_create"
+          ]
+        },
+        {
+          "id": "user_to_process_context",
+          "question": "Can we connect a user context to process activity?",
+          "required_sources": [
+            "sysmon_process_create",
+            "windows_security_logon"
+          ]
+        }
+      ],
+      "removed_source": "sysmon_process_create"
+    },
+    {
+      "lost_detections": [
+        {
+          "dependency_status": "declared_not_validated",
+          "id": "windows_failed_logon_context",
+          "required_sources": [
+            "windows_security_logon"
+          ],
+          "slug": null,
+          "title": "Windows failed logon context",
+          "validated_by_detfuzz": false
+        }
+      ],
+      "lost_investigation_questions": [
+        {
+          "id": "logon_success_failure",
+          "question": "Can we distinguish successful and failed logons?",
+          "required_sources": [
+            "windows_security_logon"
+          ]
+        },
+        {
+          "id": "user_to_process_context",
+          "question": "Can we connect a user context to process activity?",
+          "required_sources": [
+            "sysmon_process_create",
+            "windows_security_logon"
+          ]
+        }
+      ],
+      "removed_source": "windows_security_logon"
+    }
+  ]
+}

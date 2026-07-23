@@ -1,0 +1,414 @@
+﻿{
+    "schema_version":  "1.0",
+    "suite_id":  "strict-suite-fixture",
+    "suite_status":  "COMPLETED",
+    "abort_reason":  null,
+    "environment":  {
+                        "host":  "DetFuzz-Win11-Lab",
+                        "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                        "rule_slug":  "detfuzz-v0-powershell-encoded-command",
+                        "telemetry":  "Microsoft-Windows-Sysmon/Operational"
+                    },
+    "cases":  [
+                  {
+                      "case_id":  "B0",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "M1",
+                      "classification":  "VALID_BYPASS",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  false,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "M2",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "M3",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "M4",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "M5",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "NC1",
+                      "classification":  "INVALID_MUTANT",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  false,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  },
+                  {
+                      "case_id":  "B1",
+                      "classification":  "DETECTED",
+                      "marker_valid":  true,
+                      "telemetry_valid":  true,
+                      "executable_identity_valid":  true,
+                      "detection_matched":  true,
+                      "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+                      "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+                  }
+              ],
+    "evidence_manifest":  {
+                              "root":  "tests/fixtures/evidence",
+                              "files":  [
+                                            {
+                                                "path":  "B0/case-record.json",
+                                                "sha256":  "0c05406eb14d5edfbdc7b6a684848602edecc3476a01e7057d732573b1c26166",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "B0/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "B0/effect.json",
+                                                "sha256":  "dae91dc1a4938f5ced5886b9706cbad81e7cf567f8e1b6ab2d7ce937555ce1a4",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "B0/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "B0/execution.json",
+                                                "sha256":  "77d315c6e0cf4c0fa20f0a39fe3c6033fcdd9f13650c45f9013439c94377770e",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "B0/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "B0/matched-sysmon-event.xml",
+                                                "sha256":  "5f5ae505e108b4305d5fe8516e475cde4cbb2289e9c540ac44900902c7a4d8a6",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "B0/telemetry-validation.json",
+                                                "sha256":  "3f8c670a40d596821c8c1bf0fa5a1e0553d037a0699d98dad6e108e907a095c2",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "B1/case-record.json",
+                                                "sha256":  "0b740597a6a2be5aece933831ba3ee22c9a9c716207e9b7d296fe078e6399a2f",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "B1/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "B1/effect.json",
+                                                "sha256":  "bccc013324f9dadf319194d1984321ce3dfe5c1cd13b5b18055d778f8a975dc4",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "B1/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "B1/execution.json",
+                                                "sha256":  "f419674c7d5d8d0ed373d05b250c0f635518353854c1845570a00e3429c2ab53",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "B1/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "B1/matched-sysmon-event.xml",
+                                                "sha256":  "666d9ae6e31b38ea19ec7f0df55a85a3631038c3d3f4124d2b67204eda89c4a6",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "B1/telemetry-validation.json",
+                                                "sha256":  "4e9bac836b6b10c4f108ef13b10ad57a925ead2ea50208f31eb068b42f934ad9",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "M1/case-record.json",
+                                                "sha256":  "2519858a7cd8fe23216ef72ee3e76bed1fe02f264a817c6ff8e5b08e37c20144",
+                                                "size_bytes":  322
+                                            },
+                                            {
+                                                "path":  "M1/detection-result.json",
+                                                "sha256":  "2ab08cb5d12d8a6fdd6fce6626231131a0225c5c1be0b8f05fb5d46824793cd9",
+                                                "size_bytes":  185
+                                            },
+                                            {
+                                                "path":  "M1/effect.json",
+                                                "sha256":  "4cd65fd149a80993e61293ac2ed117ab973011531cf6a58db470f99b8bfc867f",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "M1/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "M1/execution.json",
+                                                "sha256":  "98522ee247f408cd6b3bcc7af4ad7ac3a44e38054d6400374c8a490b12764a69",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "M1/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "M1/matched-sysmon-event.xml",
+                                                "sha256":  "363c7ac31de16c8721387a4675b1f39d17072d04f53041e990dd87d531258383",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "M1/telemetry-validation.json",
+                                                "sha256":  "7515b507034070f234ae76e507aacf308df7af92e8e119fe70e8bd8967057b6c",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "M2/case-record.json",
+                                                "sha256":  "a00935a5c498d89dc3aedc19a6f2a000e0209e02372b7595254ce685f68ccf18",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "M2/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "M2/effect.json",
+                                                "sha256":  "27e96a3cf84d738adbeba73166a2a5fd521e85acc8e08ea4d8e564c3e7723882",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "M2/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "M2/execution.json",
+                                                "sha256":  "e4928cbef9ad4890479beb8a012843b0636d871f24d795081569bc9bdfc07c04",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "M2/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "M2/matched-sysmon-event.xml",
+                                                "sha256":  "57621e9940c8a58c246cb3705718872cd67c6ed2192763652c3db6f7c430d3bf",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "M2/telemetry-validation.json",
+                                                "sha256":  "aa743fab27dd8068ac3542926ab323a2beff1aa24adfde2a99d6efc49bd67584",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "M3/case-record.json",
+                                                "sha256":  "b88461712560261d898c31f76ec8cf8b4cbec13c803e828e5b4748e3e643ba07",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "M3/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "M3/effect.json",
+                                                "sha256":  "f8f73c2b736075bdb215bbd93627441e9995c7990016ae2f0dcb9b873a146a75",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "M3/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "M3/execution.json",
+                                                "sha256":  "f31aacfa3c7c14f2bdab5bdc7e4e143e1ec6447302b12eecc83b3a13a34729da",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "M3/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "M3/matched-sysmon-event.xml",
+                                                "sha256":  "92db8bf1494dac0b14d0c9b142cb99ce2a2e004014dfff2780a2dd875165b67f",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "M3/telemetry-validation.json",
+                                                "sha256":  "be1ac34b8fbc0d46407346459713b4e119d306ee956048cc1c246b43a09f9b4a",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "M4/case-record.json",
+                                                "sha256":  "efe68215fa11680d530d2cf38afe49863b2878c0b0ae6fb8137bdca31ffe1a21",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "M4/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "M4/effect.json",
+                                                "sha256":  "acd8b29b1311600c99cca0f1b596cc16aebc7a8f2072cbbaa30cacee0d72539f",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "M4/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "M4/execution.json",
+                                                "sha256":  "36409c5db40325db660361be066a22b48405615a34b9396782b93f30d8e68cbf",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "M4/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "M4/matched-sysmon-event.xml",
+                                                "sha256":  "d85bfca4005e5086c10810d23f79fe1bccc79d6bc9f84ccf72fabb45f62c2cdd",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "M4/telemetry-validation.json",
+                                                "sha256":  "11354c6db06ef978d97df7a13a5f66c12d60e2d9d0fbb73eba19d6dcc1dca85a",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "M5/case-record.json",
+                                                "sha256":  "a06a5f43b37388665a5048f2d9f6a693967f1ae628955efcbf07d63962bb52fd",
+                                                "size_bytes":  317
+                                            },
+                                            {
+                                                "path":  "M5/detection-result.json",
+                                                "sha256":  "19f8d37b4405467a0e006a6c8529d5a6ee51309ae33f3a0c564fc1506ac500d2",
+                                                "size_bytes":  180
+                                            },
+                                            {
+                                                "path":  "M5/effect.json",
+                                                "sha256":  "e27a694be4d5de24385975ef6e732be4de13829222a73176b04a748265d00212",
+                                                "size_bytes":  60
+                                            },
+                                            {
+                                                "path":  "M5/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "M5/execution.json",
+                                                "sha256":  "18cf28a0ca417ed39c7a6e40abab14664ea18164319b1dbf50ec0bb453e1c9a1",
+                                                "size_bytes":  98
+                                            },
+                                            {
+                                                "path":  "M5/marker-validation.json",
+                                                "sha256":  "7a8f58be94c94ea231ca1e13e8e7f51d2b1e0de5b6bd0e637154c9cf155fc977",
+                                                "size_bytes":  83
+                                            },
+                                            {
+                                                "path":  "M5/matched-sysmon-event.xml",
+                                                "sha256":  "24fecd045bf6d289360e339cc6d840de0d9ee1c3c749a7f33f652dbba04b752f",
+                                                "size_bytes":  133
+                                            },
+                                            {
+                                                "path":  "M5/telemetry-validation.json",
+                                                "sha256":  "d714355e82ae1307c5148f489bcee6adce0dc859712d6666aef1754485ee0120",
+                                                "size_bytes":  235
+                                            },
+                                            {
+                                                "path":  "NC1/case-record.json",
+                                                "sha256":  "ee715fb52920638a001b2d67169b4b527e8cd370878b5173934bfba5789b8ff4",
+                                                "size_bytes":  325
+                                            },
+                                            {
+                                                "path":  "NC1/detection-result.json",
+                                                "sha256":  "2ab08cb5d12d8a6fdd6fce6626231131a0225c5c1be0b8f05fb5d46824793cd9",
+                                                "size_bytes":  185
+                                            },
+                                            {
+                                                "path":  "NC1/executable-identity.json",
+                                                "sha256":  "4cde9523fabdb6c134a0dfc60762890e74f38138cb9fc8b7503c397932de8dd0",
+                                                "size_bytes":  177
+                                            },
+                                            {
+                                                "path":  "NC1/execution.json",
+                                                "sha256":  "efa9138e61db43ae21385dd68a041f8e3a2b4c13bfa0bd5caacfc82ed7a04dba",
+                                                "size_bytes":  99
+                                            },
+                                            {
+                                                "path":  "NC1/marker-validation.json",
+                                                "sha256":  "a37d710db025c4cb77c2d2fec0e57cff7efe2c30afbf91926d7136712098af0d",
+                                                "size_bytes":  84
+                                            },
+                                            {
+                                                "path":  "NC1/matched-sysmon-event.xml",
+                                                "sha256":  "6cee8f026c73f4f7a35119c588f30f90e051ef6d20a5b29fce71baf61f3b7b20",
+                                                "size_bytes":  134
+                                            },
+                                            {
+                                                "path":  "NC1/telemetry-validation.json",
+                                                "sha256":  "f7c32b269a896f05fef369ccb31c13e54a19e218fa6ceb2396e577c8a7241f47",
+                                                "size_bytes":  236
+                                            }
+                                        ]
+                          }
+}

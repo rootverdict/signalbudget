@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/signalbudget/contracts/detfuzz_result_schema-1.0.json",
+  "title": "DetFuzz Result Contract for SignalBudget",
+  "type": "object",
+  "required": ["schema_version", "suite_id", "suite_status", "environment", "cases", "evidence_manifest"],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "suite_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "suite_status": {
+      "type": "string"
+    },
+    "abort_reason": {
+      "type": ["string", "null"]
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string" },
+        "telemetry": { "type": "string" },
+        "rule_id": { "type": "string" },
+        "rule_slug": { "type": "string" },
+        "os": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "classification",
+          "marker_valid",
+          "telemetry_valid",
+          "executable_identity_valid",
+          "detection_matched",
+          "rule_id"
+        ],
+        "properties": {
+          "case_id": { "type": "string" },
+          "classification": { "type": "string" },
+          "kind": { "type": "string" },
+          "description": { "type": "string" },
+          "invocation": { "type": "string" },
+          "marker_valid": { "type": "boolean" },
+          "telemetry_valid": { "type": "boolean" },
+          "executable_identity_valid": { "type": "boolean" },
+          "rule_id": { "type": "string" },
+          "telemetry_reason": { "type": "string" },
+          "detection_matched": { "type": ["boolean", "null"] },
+          "detection_reason": { "type": "string" },
+          "predicted_v0_rule_match": { "type": "boolean" },
+          "prediction_met": { "type": ["boolean", "null"] },
+          "required_fields_present": { "type": "boolean" },
+          "exit_code": { "type": ["integer", "null"] },
+          "started_at_utc": { "type": "string" },
+          "ended_at_utc": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "classification_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" }
+    },
+    "evidence_manifest": {
+      "type": "object",
+      "required": ["root", "files"],
+      "properties": {
+        "root": { "type": "string" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["path", "sha256", "size_bytes"],
+            "properties": {
+              "path": { "type": "string" },
+              "sha256": { "type": "string" },
+              "size_bytes": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

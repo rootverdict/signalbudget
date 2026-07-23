@@ -1,0 +1,6 @@
+﻿{
+    "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+    "rule_slug":  "detfuzz-v0-powershell-encoded-command",
+    "matched":  false,
+    "reason":  "RULE_NOT_MATCHED"
+}

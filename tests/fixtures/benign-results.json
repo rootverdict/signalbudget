@@ -1,0 +1,31 @@
+﻿{
+  "abort_reason": null,
+  "cases": [
+    {
+      "case_id": "BF0",
+      "classification": "BENIGN_NO_ALERT",
+      "detection_matched": false,
+      "telemetry_valid": true
+    },
+    {
+      "case_id": "BF1",
+      "classification": "BENIGN_ALERT",
+      "detection_matched": true,
+      "telemetry_valid": true
+    },
+    {
+      "case_id": "BF2",
+      "classification": "BENIGN_ALERT",
+      "detection_matched": true,
+      "telemetry_valid": true
+    }
+  ],
+  "environment": {
+    "host": "DetFuzz-Win11-Lab",
+    "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+    "telemetry": "Microsoft-Windows-Sysmon/Operational"
+  },
+  "schema_version": "1.0",
+  "suite_id": "1a545575-f640-45b2-91de-fc0bf1ed419c",
+  "suite_status": "COMPLETED"
+}

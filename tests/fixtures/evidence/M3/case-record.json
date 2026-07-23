@@ -1,0 +1,10 @@
+﻿{
+    "case_id":  "M3",
+    "classification":  "DETECTED",
+    "marker_valid":  true,
+    "telemetry_valid":  true,
+    "executable_identity_valid":  true,
+    "detection_matched":  true,
+    "rule_id":  "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
+    "rule_slug":  "detfuzz-v0-powershell-encoded-command"
+}

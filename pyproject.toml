@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signalbudget"
+version = "0.1.0"
+description = "Cost-aware security telemetry catalog and planning tool."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "SignalBudget contributors" }]
+dependencies = []
+
+[project.scripts]
+signalbudget = "signalbudget.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

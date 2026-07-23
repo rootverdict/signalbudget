@@ -1,0 +1,19 @@
+{
+  "case_count": 1,
+  "cases": [
+    {
+      "case_id": "B0",
+      "classification": "DETECTED",
+      "detection_matched": true,
+      "marker_valid": true,
+      "telemetry_valid": true
+    }
+  ],
+  "environment": {
+    "host": "DetFuzz-Win11-Lab",
+    "os": "Windows 11 Enterprise Evaluation",
+    "telemetry": "Microsoft-Windows-Sysmon/Operational"
+  },
+  "schema_version": "1.0",
+  "suite_id": "2b2671ab-4e3a-460d-83ab-31eec2f426db"
+}

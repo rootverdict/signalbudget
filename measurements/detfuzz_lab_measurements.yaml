@@ -1,0 +1,18 @@
+schema_version: "1.0"
+measurements:
+  - id: detfuzz_phase6_b0_report
+    source_id: sysmon_process_create
+    measurement_type: "evidence_file_size_not_billable_ingestion"
+    artifact: "outputs/phase-6-suite-report.json"
+    events_observed: 1
+    evidence_files_observed: 2
+    evidence_bytes_observed: 3415
+    notes: "B0 report includes one marker JSON and one saved Sysmon XML event. This is evidence size, not Azure billable ingestion size."
+  - id: detfuzz_phase7_benign_results
+    source_id: sysmon_process_create
+    measurement_type: "fixture_event_count_not_billable_ingestion"
+    artifact: "outputs/detfuzz-phase-7-vm-evidence.zip"
+    events_observed: 3
+    evidence_files_observed: 12
+    evidence_bytes_observed: 11310
+    notes: "Phase 7 evidence contains per-fixture execution, telemetry, and detection JSON files. This is lab evidence size, not monthly ingestion volume."

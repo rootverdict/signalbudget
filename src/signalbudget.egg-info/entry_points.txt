@@ -1,0 +1,2 @@
+[console_scripts]
+signalbudget = signalbudget.cli:main

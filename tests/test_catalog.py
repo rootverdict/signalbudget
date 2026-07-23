@@ -1,8 +1,11 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from signalbudget.coverage import detection_readiness, investigation_readiness, source_ids
 from signalbudget.loaders import (
     load_catalog_bundle,
+    load_restricted_yaml,
     package_data_root,
     project_root,
 )
@@ -75,6 +78,27 @@ class CatalogTests(unittest.TestCase):
 
         self.assertTrue(all(detections.values()))
         self.assertTrue(all(questions.values()))
+
+    def test_inline_list_parser_preserves_quoted_commas(self) -> None:
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "quoted-list.yaml"
+            path.write_text(
+                'schema_version: "1.0"\n'
+                "values: ['a, b', \"c, d\", plain]\n",
+                encoding="utf-8",
+            )
+
+            payload = load_restricted_yaml(path)
+
+        self.assertEqual(payload["values"], ["a, b", "c, d", "plain"])
+
+    def test_inline_list_parser_rejects_malformed_lists(self) -> None:
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "bad-list.yaml"
+            path.write_text("values: [alpha, , beta]\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "empty item in inline list"):
+                load_restricted_yaml(path)
 
 
 if __name__ == "__main__":

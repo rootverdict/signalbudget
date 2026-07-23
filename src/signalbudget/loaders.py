@@ -128,7 +128,7 @@ def _parse_scalar(value: str) -> Any:
         inner = value[1:-1].strip()
         if not inner:
             return []
-        return [_parse_scalar(part.strip()) for part in inner.split(",")]
+        return [_parse_scalar(part) for part in _split_inline_list_items(inner)]
     if (
         (value.startswith('"') and value.endswith('"'))
         or (value.startswith("'") and value.endswith("'"))
@@ -140,3 +140,35 @@ def _parse_scalar(value: str) -> Any:
         return int(value)
     except ValueError:
         return value
+
+
+def _split_inline_list_items(value: str) -> list[str]:
+    items: list[str] = []
+    in_quote = False
+    quote_char = ""
+    start = 0
+
+    for index, character in enumerate(value):
+        if character in {"'", '"'}:
+            if not in_quote:
+                in_quote = True
+                quote_char = character
+            elif quote_char == character:
+                in_quote = False
+            continue
+
+        if character == "," and not in_quote:
+            item = value[start:index].strip()
+            if not item:
+                raise ValueError(f"empty item in inline list: [{value}]")
+            items.append(item)
+            start = index + 1
+
+    if in_quote:
+        raise ValueError(f"unterminated quote in inline list: [{value}]")
+
+    item = value[start:].strip()
+    if not item:
+        raise ValueError(f"empty item in inline list: [{value}]")
+    items.append(item)
+    return items

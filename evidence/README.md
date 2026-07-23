@@ -42,6 +42,21 @@ validated_rule_ids: d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62
 legacy_preliminary_classifications_accepted: M1
 ```
 
+## Zip Portability Note
+
+The current archive was verified with Python's `zipfile` module and uses
+portable `/` member separators, so scripted extraction creates real nested
+directories such as:
+
+```text
+4ddc2989-4c84-49fe-801e-996c67a5702f/reports/suite-report.json
+```
+
+When regenerating evidence packages on Windows, keep zip member names in this
+portable form. Backslash-separated member names can be extracted by Python as
+literal flat filenames on macOS/Linux, even when some unzip tools repair them
+with a warning.
+
 The human-readable reports in this directory are regenerated from that suite:
 
 ```text

@@ -23,9 +23,9 @@ DetFuzz data-only import boundary.
 - Pricing freshness check using `retrieved_at` and `max_age_days`.
 - Test that fails if SignalBudget source or tests import `detfuzz.*` code.
 
-The configuration output uses `telemetry_ready_detection_count`, not
-`validated_detection_count`, because only the DetFuzz v0 rule is validated by
-real evidence so far.
+The configuration output always includes `telemetry_ready_detection_count`.
+When `enumerate-configurations` is given a strict DetFuzz suite artifact, it
+also populates `validated_detection_count` for the DetFuzz-validated rule.
 
 ## Pricing Source
 

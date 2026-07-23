@@ -58,6 +58,16 @@ def validate_detfuzz(args: argparse.Namespace) -> None:
 
 def configurations(args: argparse.Namespace) -> None:
     bundle = load_catalog_bundle(args.root)
+    detfuzz_summary = None
+    validated_rule_ids: set[str] = set()
+    detfuzz_result = getattr(args, "detfuzz_result", None)
+    if detfuzz_result is not None:
+        detfuzz_summary = validate_detfuzz_result_file(
+            detfuzz_result,
+            evidence_root=getattr(args, "detfuzz_evidence_root", None),
+            require_suite_contract=True,
+        )
+        validated_rule_ids = set(detfuzz_summary["validated_rule_ids"])
     source_costs = estimate_monthly_source_costs(
         bundle.source_volumes,
         bundle.pricing,
@@ -67,6 +77,7 @@ def configurations(args: argparse.Namespace) -> None:
         bundle.detection_dependencies,
         bundle.investigation_questions,
         source_costs,
+        validated_rule_ids,
     )
     payload = {
         "schema_version": "1.0",
@@ -75,6 +86,8 @@ def configurations(args: argparse.Namespace) -> None:
         "source_costs": source_costs,
         "configurations": configuration_payload,
     }
+    if detfuzz_summary is not None:
+        payload["detfuzz_contract"] = detfuzz_summary
     print(json.dumps(payload, indent=2, sort_keys=True))
 
 
@@ -174,7 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     configs = subcommands.add_parser(
         "enumerate-configurations",
-        help="Enumerate the eight Phase 8 source combinations without Pareto ranking.",
+        help="Enumerate the eight source combinations without Pareto ranking.",
     )
     configs.add_argument(
         "--root",
@@ -182,6 +195,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="SignalBudget project root. Defaults to the installed source tree.",
     )
+    configs.add_argument(
+        "--detfuzz-result",
+        type=Path,
+        default=None,
+        help=(
+            "Optional verified DetFuzz suite report JSON used for validated "
+            "coverage counts."
+        ),
+    )
+    configs.add_argument("--detfuzz-evidence-root", type=Path, default=None)
 
     pareto_parser = subcommands.add_parser(
         "pareto-analysis",

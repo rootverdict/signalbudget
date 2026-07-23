@@ -4,6 +4,7 @@ import io
 import json
 import unittest
 from contextlib import redirect_stdout
+from pathlib import Path
 from unittest.mock import patch
 
 from signalbudget.cli import configurations, main
@@ -57,6 +58,44 @@ class CliTests(unittest.TestCase):
         payload = json.loads(output.getvalue())
         self.assertEqual(payload["configuration_count"], 16)
         self.assertEqual(payload["configuration_count"], len(payload["configurations"]))
+
+    def test_enumerate_configurations_accepts_detfuzz_artifact(self) -> None:
+        output = io.StringIO()
+        detfuzz_summary = {
+            "validated_rule_ids": ["d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62"],
+            "suite_status": "COMPLETED",
+        }
+
+        with patch(
+            "sys.argv",
+            [
+                "signalbudget",
+                "enumerate-configurations",
+                "--detfuzz-result",
+                "suite-report.json",
+                "--detfuzz-evidence-root",
+                "evidence",
+            ],
+        ):
+            with patch(
+                "signalbudget.cli.validate_detfuzz_result_file",
+                return_value=detfuzz_summary,
+            ) as validate:
+                with redirect_stdout(output):
+                    main()
+
+        validate.assert_called_once_with(
+            Path("suite-report.json"),
+            evidence_root=Path("evidence"),
+            require_suite_contract=True,
+        )
+        payload = json.loads(output.getvalue())
+        by_id = {config["configuration_id"]: config for config in payload["configurations"]}
+        self.assertEqual(
+            by_id["sysmon_process_create"]["validated_detection_count"],
+            1,
+        )
+        self.assertEqual(payload["detfuzz_contract"], detfuzz_summary)
 
 
 if __name__ == "__main__":

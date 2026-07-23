@@ -25,9 +25,8 @@ Provide a portable strict-contract fixture.
 
 `tests/test_no_detfuzz_imports.py`
 
-Proves the deployable `src/signalbudget/` package does not import DetFuzz code.
-The repository-level `integration_tests/` directory is the explicit
-cross-project exception.
+Proves `src/signalbudget/`, `tests/`, and `integration_tests/` do not import
+DetFuzz code.
 
 ## Latest VM Evidence
 
@@ -108,7 +107,8 @@ Removing `sysmon_process_create` loses the validated rule
 
 `tests/` contains unit and regression tests.
 
-`integration_tests/` verifies DetFuzz-to-SignalBudget compatibility.
+`integration_tests/` verifies exported DetFuzz evidence is accepted by the
+SignalBudget strict contract without importing DetFuzz code.
 
 `.github/workflows/ci.yml` builds and installs the wheel, runs the unit and
 integration suites, lints, and type-checks on Python 3.11.

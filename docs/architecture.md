@@ -56,11 +56,10 @@ the same catalogs used by the Pareto engine.
 
 ## Boundary
 
-The deployable SignalBudget package must not import `detfuzz.*`; it consumes
-only exported DetFuzz JSON and evidence files. This is enforced for
-`src/signalbudget/` by `tests/test_no_detfuzz_imports.py`.
+SignalBudget must not import `detfuzz.*`; it consumes only exported DetFuzz JSON
+and evidence files. This is enforced for `src/signalbudget/`, `tests/`, and
+`integration_tests/` by `tests/test_no_detfuzz_imports.py`.
 
-`integration_tests/` is an explicit repository-level exception. It may import
-both projects to verify cross-package compatibility, but it is not part of the
-installed SignalBudget package because `pyproject.toml` discovers packages only
-from `src/`.
+`integration_tests/` verifies the exported-evidence contract using committed
+DetFuzz report and evidence fixtures, so standalone SignalBudget CI does not
+need a DetFuzz checkout.

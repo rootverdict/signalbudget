@@ -21,7 +21,7 @@ DetFuzz data-only import boundary.
   for all combinations.
 - Dynamic `cost_boundary` text generated from source cost status.
 - Pricing freshness check using `retrieved_at` and `max_age_days`.
-- Test that fails if `src/signalbudget/` imports `detfuzz.*` code.
+- Test that fails if SignalBudget source or tests import `detfuzz.*` code.
 
 The configuration output uses `telemetry_ready_detection_count`, not
 `validated_detection_count`, because only the DetFuzz v0 rule is validated by
@@ -47,10 +47,10 @@ Actual pricing may vary by agreement, currency, taxes, and purchase date.
 ## Evidence Boundary
 
 SignalBudget consumes DetFuzz exported JSON only. It must not import
-`detfuzz.*` code from `src/signalbudget/`. This boundary is enforced by
+`detfuzz.*` code from source or tests. This boundary is enforced by
 `tests/test_no_detfuzz_imports.py`. The repository-level `integration_tests/`
-directory is an intentional exception for cross-package compatibility checks
-and is not part of the deployable SignalBudget package.
+directory verifies committed exported-evidence fixtures without requiring a
+DetFuzz checkout.
 
 ## Measurement Boundary
 

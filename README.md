@@ -8,11 +8,11 @@ Which log sources are worth keeping when cost, detection coverage, and
 investigation utility all matter?
 ```
 
-The project is paired with DetFuzz. DetFuzz produces real Windows/Sysmon
-evidence for one validated detection rule; SignalBudget consumes the exported
-JSON artifacts through a versioned data contract and keeps the other catalog
-detections clearly labeled as declared but not DetFuzz-validated. SignalBudget
-does not import `detfuzz.*` code in its deployable package.
+The project is paired with DetFuzz evidence, not DetFuzz code. DetFuzz produces
+real Windows/Sysmon evidence for one validated detection rule; SignalBudget
+consumes the exported JSON artifacts through a versioned data contract and
+keeps the other catalog detections clearly labeled as declared but not
+DetFuzz-validated. SignalBudget does not import `detfuzz.*` code.
 
 ## What It Does
 
@@ -53,11 +53,11 @@ python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detf
 python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```
 
-From the combined repository root, run the cross-project contract test:
+Run the standalone exported-evidence contract test:
 
 ```powershell
-$env:PYTHONPATH='detfuzz\src;signalbudget\src'
-python -m unittest discover -s signalbudget\integration_tests
+$env:PYTHONPATH='src'
+python -m unittest discover -s integration_tests
 ```
 
 Expected test result:
@@ -122,6 +122,7 @@ python -m pip install -c constraints.txt -e ".[dev]"
 python -m ruff check src tests integration_tests
 python -m mypy src
 python -m unittest discover -s tests -v
+python -m unittest discover -s integration_tests -v
 python -m signalbudget.cli summarize
 ```
 

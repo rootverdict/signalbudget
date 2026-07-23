@@ -44,14 +44,5 @@ jobs:
       - name: Type-check
         run: python -m mypy src
 
-      - name: Check out DetFuzz
-        uses: actions/checkout@v4
-        with:
-          repository: rootverdict/detfuzz
-          path: detfuzz
-
-      - name: Install DetFuzz
-        run: python -m pip install ./detfuzz
-
-      - name: Run cross-project contract test
+      - name: Run exported-evidence contract test
         run: python -m unittest discover -s integration_tests -v

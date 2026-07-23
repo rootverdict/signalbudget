@@ -34,14 +34,14 @@ defect.
   report classification as `VALID_BYPASS`.
 - JSON and Markdown reports.
 - Wheel packaging with all catalogs, contracts, measurements, and pricing data.
-- Unit tests, cross-project integration, linting, type checking, and CI.
+- Unit tests, exported-evidence integration, linting, type checking, and CI.
 - Explicit warnings that lab-derived costs are not production forecasts.
 
 ## Definition Of Done
 
 V1 is complete when every included capability is implemented, the unit and
-cross-project integration suites pass, Ruff and Mypy pass, a wheel installs and
-runs outside the repository, strict validation succeeds against the
+exported-evidence integration suites pass, Ruff and Mypy pass, a wheel installs
+and runs outside the repository, strict validation succeeds against the
 repository-local evidence archive, and generated reports agree with that
 archive.
 

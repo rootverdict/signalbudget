@@ -64,6 +64,23 @@ class CostingTests(unittest.TestCase):
         self.assertIn("powershell_script_block: lab_24h_measurement", text)
         self.assertIn("windows_security_logon: lab_24h_measurement", text)
 
+    def test_mixed_configuration_preserves_mixed_estimate_provenance(self) -> None:
+        summary = summarize_selected_source_costs(
+            ["measured", "generic"],
+            {
+                "measured": {
+                    "estimated_monthly_cost_usd": 1.0,
+                    "cost_status": "ESTIMATED_FROM_24H_LAB_MEASUREMENT",
+                },
+                "generic": {
+                    "estimated_monthly_cost_usd": 2.0,
+                    "cost_status": "ESTIMATED",
+                },
+            },
+        )
+
+        self.assertEqual(summary["cost_status"], "MIXED_ESTIMATE_PROVENANCE")
+
 
 if __name__ == "__main__":
     unittest.main()

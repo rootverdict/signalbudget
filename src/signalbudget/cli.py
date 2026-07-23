@@ -146,6 +146,7 @@ def explain_tradeoffs(args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="signalbudget")
+    parser.set_defaults(root=None)
     subcommands = parser.add_subparsers(dest="command")
 
     summary = subcommands.add_parser(

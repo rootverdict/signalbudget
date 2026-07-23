@@ -1,8 +1,10 @@
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from signalbudget.contracts import (
     ContractValidationError,
@@ -50,6 +52,53 @@ class ContractTests(unittest.TestCase):
                 FIXTURES / "phase6-b0-suite-report.json",
                 require_suite_contract=True,
             )
+
+    def test_strict_suite_contract_rejects_detected_case_without_match(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        payload["cases"][0]["detection_matched"] = False
+
+        with self.assertRaisesRegex(
+            ContractValidationError,
+            "classified as DETECTED must have detection_matched true",
+        ):
+            validate_detfuzz_result(
+                payload,
+                evidence_root=FIXTURES / "evidence",
+                require_suite_contract=True,
+            )
+
+    def test_strict_suite_contract_cross_checks_detection_evidence(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_root = Path(directory) / "evidence"
+            shutil.copytree(FIXTURES / "evidence", evidence_root)
+            detection_path = evidence_root / "B0" / "detection-result.json"
+            detection = json.loads(detection_path.read_text(encoding="utf-8-sig"))
+            detection["matched"] = False
+            detection_path.write_text(json.dumps(detection), encoding="utf-8")
+            manifest_item = next(
+                item
+                for item in payload["evidence_manifest"]["files"]
+                if item["path"].replace("\\", "/").lower()
+                == "b0/detection-result.json"
+            )
+            data = detection_path.read_bytes()
+            manifest_item["sha256"] = hashlib.sha256(data).hexdigest()
+            manifest_item["size_bytes"] = len(data)
+
+            with self.assertRaisesRegex(
+                ContractValidationError,
+                "does not match detection-result.json",
+            ):
+                validate_detfuzz_result(
+                    payload,
+                    evidence_root=evidence_root,
+                    require_suite_contract=True,
+                )
 
     def test_strict_suite_contract_rejects_missing_case_evidence(self) -> None:
         payload_path = FIXTURES / "full-suite-report.json"
@@ -133,6 +182,20 @@ class ContractTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ContractValidationError, "64 hexadecimal"):
             _validate_evidence_manifest(payload, FIXTURES / "evidence")
+
+    def test_manifest_hashing_does_not_read_entire_files_at_once(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+
+        with patch.object(
+            Path,
+            "read_bytes",
+            side_effect=AssertionError("read_bytes must not be used for evidence"),
+        ):
+            result = _validate_evidence_manifest(payload, FIXTURES / "evidence")
+
+        self.assertTrue(result["evidence_hashes_verified"])
 
 
 if __name__ == "__main__":

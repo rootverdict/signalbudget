@@ -93,7 +93,11 @@ def validate_detfuzz_result(
     }
     if require_suite_contract:
         _validate_analysis_contract(payload, normalized_cases)
-        manifest_result = _validate_evidence_manifest(payload, evidence_root)
+        manifest_result = _validate_evidence_manifest(
+            payload,
+            evidence_root,
+            cases=normalized_cases,
+        )
         summary.update(manifest_result)
         summary["validated_rule_ids"] = [EXPECTED_RULE_ID]
     else:
@@ -155,13 +159,23 @@ def _validate_analysis_contract(
             )
         if case.get("rule_id") != EXPECTED_RULE_ID:
             raise ContractValidationError(f"{case_id} rule_id must be {EXPECTED_RULE_ID}")
-        if case_id != "NC1" and not isinstance(case.get("detection_matched"), bool):
+        if not isinstance(case.get("detection_matched"), bool):
             raise ContractValidationError(f"{case_id} detection_matched must be boolean")
+        classification = case["classification"]
+        if classification == "DETECTED" and case["detection_matched"] is not True:
+            raise ContractValidationError(
+                f"{case_id} classified as DETECTED must have detection_matched true"
+            )
+        if classification == "VALID_BYPASS" and case["detection_matched"] is not False:
+            raise ContractValidationError(
+                f"{case_id} classified as VALID_BYPASS must have detection_matched false"
+            )
 
 
 def _validate_evidence_manifest(
     payload: dict[str, Any],
     evidence_root: Path | None,
+    cases: list[dict[str, Any]] | None = None,
 ) -> dict[str, object]:
     manifest = payload.get("evidence_manifest")
     if not isinstance(manifest, dict):
@@ -179,6 +193,7 @@ def _validate_evidence_manifest(
     if not root.is_dir():
         raise ContractValidationError(f"evidence root does not exist: {root}")
     manifest_paths: set[str] = set()
+    resolved_paths: dict[str, Path] = {}
     checked = 0
     for index, item in enumerate(files):
         if not isinstance(item, dict):
@@ -198,23 +213,61 @@ def _validate_evidence_manifest(
             raise ContractValidationError(
                 f"evidence manifest file is missing: {item['path']}"
             )
-        data = file_path.read_bytes()
-        digest = hashlib.sha256(data).hexdigest()
+        digest, size = _hash_file(file_path)
         if digest.lower() != item["sha256"].lower():
             raise ContractValidationError(
                 f"evidence hash mismatch for {item['path']}"
             )
-        if len(data) != int(item["size_bytes"]):
+        if size != int(item["size_bytes"]):
             raise ContractValidationError(
                 f"evidence size mismatch for {item['path']}"
             )
         checked += 1
+        resolved_paths[normalized_path] = file_path
     _require_complete_case_evidence(manifest_paths)
+    if cases is not None:
+        _validate_detection_evidence(cases, resolved_paths)
     return {
         "evidence_manifest_file_count": len(files),
         "evidence_hashes_verified": checked == len(files),
         "evidence_files_checked": checked,
     }
+
+
+def _hash_file(path: Path, chunk_size: int = 1024 * 1024) -> tuple[str, int]:
+    digest = hashlib.sha256()
+    size = 0
+    with path.open("rb") as stream:
+        while chunk := stream.read(chunk_size):
+            digest.update(chunk)
+            size += len(chunk)
+    return digest.hexdigest(), size
+
+
+def _validate_detection_evidence(
+    cases: list[dict[str, Any]],
+    resolved_paths: dict[str, Path],
+) -> None:
+    for case in cases:
+        case_id = str(case["case_id"])
+        normalized_path = _normalize_evidence_path(
+            f"{case_id}/detection-result.json"
+        )
+        evidence_path = resolved_paths[normalized_path]
+        evidence = load_json(evidence_path)
+        matched = evidence.get("matched")
+        if not isinstance(matched, bool):
+            raise ContractValidationError(
+                f"{case_id} detection-result.json matched must be boolean"
+            )
+        if matched is not case["detection_matched"]:
+            raise ContractValidationError(
+                f"{case_id} detection_matched does not match detection-result.json"
+            )
+        if evidence.get("rule_id") != EXPECTED_RULE_ID:
+            raise ContractValidationError(
+                f"{case_id} detection-result.json rule_id must be {EXPECTED_RULE_ID}"
+            )
 
 
 def _require_complete_case_evidence(manifest_paths: set[str]) -> None:

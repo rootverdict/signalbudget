@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 PRICING_FRESH = "PRICING_FRESH"
@@ -13,9 +13,14 @@ def pricing_freshness(
 ) -> dict[str, object]:
     retrieved_at = _parse_utc(str(pricing_profile["retrieved_at"]))
     current = as_of or datetime.now(UTC)
-    age_days = (current - retrieved_at).days
+    if current.tzinfo is None:
+        current = current.replace(tzinfo=UTC)
+    else:
+        current = current.astimezone(UTC)
+    age = current - retrieved_at
+    age_days = age.days
     max_age_days = int(pricing_profile["max_age_days"])
-    if age_days < 0:
+    if age < timedelta(0):
         return {
             "retrieved_at": retrieved_at.isoformat().replace("+00:00", "Z"),
             "age_days": age_days,
@@ -24,14 +29,15 @@ def pricing_freshness(
             "status": PRICING_STALE,
             "reason": "PRICING_RETRIEVED_IN_FUTURE",
         }
+    fresh = age <= timedelta(days=max_age_days)
     return {
         "retrieved_at": retrieved_at.isoformat().replace("+00:00", "Z"),
         "age_days": age_days,
         "max_age_days": max_age_days,
-        "fresh": age_days <= max_age_days,
-        "status": PRICING_FRESH if age_days <= max_age_days else PRICING_STALE,
+        "fresh": fresh,
+        "status": PRICING_FRESH if fresh else PRICING_STALE,
         "reason": "PRICING_WITHIN_MAX_AGE"
-        if age_days <= max_age_days
+        if fresh
         else "PRICING_OLDER_THAN_MAX_AGE",
     }
 

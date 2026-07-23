@@ -22,6 +22,7 @@ class CatalogTests(unittest.TestCase):
     def test_loads_phase8_catalogs(self) -> None:
         bundle = load_catalog_bundle(project_root())
 
+        self.assertEqual(bundle.detection_dependencies["schema_version"], "1.0")
         self.assertEqual(len(bundle.log_sources["sources"]), 3)
         self.assertEqual(len(bundle.detection_dependencies["detections"]), 3)
         self.assertEqual(len(bundle.investigation_questions["questions"]), 5)

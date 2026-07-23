@@ -6,11 +6,22 @@ import unittest
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from signalbudget.cli import configurations
+from signalbudget.cli import configurations, main
 from signalbudget.loaders import CatalogBundle, load_catalog_bundle, project_root
 
 
 class CliTests(unittest.TestCase):
+    def test_no_subcommand_defaults_to_summary(self) -> None:
+        output = io.StringIO()
+
+        with patch("sys.argv", ["signalbudget"]):
+            with redirect_stdout(output):
+                main()
+
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["schema_version"], "1.0")
+        self.assertEqual(payload["log_sources"], 3)
+
     def test_configuration_count_is_derived_from_catalog(self) -> None:
         bundle = load_catalog_bundle(project_root())
         log_sources = copy.deepcopy(bundle.log_sources)

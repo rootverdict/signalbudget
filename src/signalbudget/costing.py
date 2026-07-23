@@ -143,8 +143,6 @@ def _cost_status_for_measurement(measurement_status: str) -> str:
 
 
 def _combined_cost_status(statuses: set[str]) -> str:
-    if "ESTIMATED_FROM_24H_LAB_MEASUREMENT" in statuses:
-        return "ESTIMATED_FROM_24H_LAB_MEASUREMENT"
-    if "ESTIMATED_FROM_LAB_SAMPLE" in statuses:
-        return "ESTIMATED_FROM_LAB_SAMPLE"
-    return "ESTIMATED"
+    if len(statuses) == 1:
+        return next(iter(statuses))
+    return "MIXED_ESTIMATE_PROVENANCE"

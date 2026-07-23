@@ -51,7 +51,7 @@ def load_restricted_yaml(path: Path) -> dict[str, Any]:
     current_list_name: str | None = None
     current_item: dict[str, Any] | None = None
 
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
+    for raw_line in path.read_text(encoding="utf-8-sig").splitlines():
         line = _strip_comment(raw_line).rstrip()
         if not line.strip():
             continue

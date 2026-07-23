@@ -8,9 +8,9 @@ DAYS_PER_MONTH = 30
 def estimate_monthly_source_costs(
     volume_profile: dict[str, Any],
     pricing_profile: dict[str, Any],
-) -> dict[str, dict[str, object]]:
+) -> dict[str, dict[str, Any]]:
     prices = _price_by_log_tier(pricing_profile)
-    estimates: dict[str, dict[str, object]] = {}
+    estimates: dict[str, dict[str, Any]] = {}
 
     for source in volume_profile.get("volume_profiles", []):
         source_id = source["source_id"]
@@ -53,8 +53,8 @@ def estimate_monthly_source_costs(
 
 def summarize_selected_source_costs(
     selected_sources: list[str],
-    source_costs: dict[str, dict[str, object]],
-) -> dict[str, object]:
+    source_costs: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
     if not selected_sources:
         return {
             "known_monthly_cost_usd": 0.0,
@@ -111,7 +111,7 @@ def summarize_selected_source_costs(
     }
 
 
-def cost_boundary_text(source_costs: dict[str, dict[str, object]]) -> str:
+def cost_boundary_text(source_costs: dict[str, dict[str, Any]]) -> str:
     parts = []
     for source_id, cost in sorted(source_costs.items()):
         measurement_status = cost.get("measurement_status", "pending")

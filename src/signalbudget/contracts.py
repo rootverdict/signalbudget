@@ -1,10 +1,10 @@
 ﻿from __future__ import annotations
 
-import json
 import hashlib
-from pathlib import Path
+import json
+from functools import lru_cache
+from pathlib import Path, PurePosixPath
 from typing import Any
-
 
 SUPPORTED_DETFUZZ_SCHEMA_VERSION = "1.0"
 EXPECTED_SUITE_CASE_IDS = {"B0", "M1", "M2", "M3", "M4", "M5", "NC1", "B1"}
@@ -20,6 +20,12 @@ REQUIRED_CASE_EVIDENCE_FILES = (
     "detection-result.json",
     "matched-sysmon-event.xml",
 )
+CONTRACT_SCHEMA_FILE = (
+    Path(__file__).resolve().parent
+    / "data"
+    / "contracts"
+    / "detfuzz_result_schema.json"
+)
 
 
 class ContractValidationError(ValueError):
@@ -33,11 +39,20 @@ def load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
+@lru_cache(maxsize=1)
+def load_contract_schema() -> dict[str, Any]:
+    schema = json.loads(CONTRACT_SCHEMA_FILE.read_text(encoding="utf-8"))
+    if not isinstance(schema, dict):
+        raise ContractValidationError("DetFuzz contract schema must be a JSON object")
+    return schema
+
+
 def validate_detfuzz_result(
     payload: dict[str, Any],
     evidence_root: Path | None = None,
     require_suite_contract: bool = False,
 ) -> dict[str, Any]:
+    _validate_schema_value(payload, load_contract_schema(), "result")
     _require(payload, "schema_version", str)
     if payload["schema_version"] != SUPPORTED_DETFUZZ_SCHEMA_VERSION:
         raise ContractValidationError(
@@ -155,7 +170,14 @@ def _validate_evidence_manifest(
     if not isinstance(files, list) or not files:
         raise ContractValidationError("evidence_manifest.files must be non-empty")
 
-    root = evidence_root or Path(str(manifest.get("root", "")))
+    if evidence_root is None:
+        raise ContractValidationError(
+            "evidence_root is required for strict verification; "
+            "the manifest root is informational and is never trusted"
+        )
+    root = evidence_root.resolve()
+    if not root.is_dir():
+        raise ContractValidationError(f"evidence root does not exist: {root}")
     manifest_paths: set[str] = set()
     checked = 0
     for index, item in enumerate(files):
@@ -164,24 +186,29 @@ def _validate_evidence_manifest(
         _require(item, "path", str, prefix=f"evidence_manifest.files[{index}]")
         _require(item, "sha256", str, prefix=f"evidence_manifest.files[{index}]")
         _require(item, "size_bytes", int, prefix=f"evidence_manifest.files[{index}]")
-        manifest_paths.add(_normalize_evidence_path(item["path"]))
-        file_path = root / item["path"]
-        if file_path.exists():
-            data = file_path.read_bytes()
-            digest = hashlib.sha256(data).hexdigest()
-            if digest.lower() != item["sha256"].lower():
-                raise ContractValidationError(
-                    f"evidence hash mismatch for {item['path']}"
-                )
-            if len(data) != int(item["size_bytes"]):
-                raise ContractValidationError(
-                    f"evidence size mismatch for {item['path']}"
-                )
-            checked += 1
-    if checked != len(files):
-        raise ContractValidationError(
-            "all evidence manifest files must be present for hash verification"
-        )
+        normalized_path = _normalize_evidence_path(item["path"])
+        if normalized_path in manifest_paths:
+            raise ContractValidationError(
+                f"duplicate evidence manifest path: {item['path']}"
+            )
+        manifest_paths.add(normalized_path)
+        _validate_manifest_metadata(item, index)
+        file_path = _resolve_evidence_path(root, item["path"])
+        if not file_path.is_file():
+            raise ContractValidationError(
+                f"evidence manifest file is missing: {item['path']}"
+            )
+        data = file_path.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        if digest.lower() != item["sha256"].lower():
+            raise ContractValidationError(
+                f"evidence hash mismatch for {item['path']}"
+            )
+        if len(data) != int(item["size_bytes"]):
+            raise ContractValidationError(
+                f"evidence size mismatch for {item['path']}"
+            )
+        checked += 1
     _require_complete_case_evidence(manifest_paths)
     return {
         "evidence_manifest_file_count": len(files),
@@ -211,6 +238,43 @@ def _normalize_evidence_path(path: str) -> str:
     return path.replace("\\", "/").lower()
 
 
+def _resolve_evidence_path(root: Path, value: str) -> Path:
+    normalized = value.replace("\\", "/")
+    pure_path = PurePosixPath(normalized)
+    has_windows_drive = len(normalized) >= 2 and normalized[1] == ":"
+    if (
+        not normalized
+        or pure_path.is_absolute()
+        or has_windows_drive
+        or ".." in pure_path.parts
+    ):
+        raise ContractValidationError(
+            f"evidence path must be safe and relative: {value}"
+        )
+    resolved = (root / Path(*pure_path.parts)).resolve()
+    if not resolved.is_relative_to(root):
+        raise ContractValidationError(
+            f"evidence path must remain within evidence root: {value}"
+        )
+    return resolved
+
+
+def _validate_manifest_metadata(item: dict[str, Any], index: int) -> None:
+    sha256 = item["sha256"]
+    if (
+        len(sha256) != 64
+        or any(character not in "0123456789abcdefABCDEF" for character in sha256)
+    ):
+        raise ContractValidationError(
+            f"evidence_manifest.files[{index}].sha256 must be 64 hexadecimal characters"
+        )
+    size = item["size_bytes"]
+    if isinstance(size, bool) or size < 0:
+        raise ContractValidationError(
+            f"evidence_manifest.files[{index}].size_bytes must be non-negative"
+        )
+
+
 def _require(
     payload: dict[str, Any],
     key: str,
@@ -223,3 +287,68 @@ def _require(
         raise ContractValidationError(
             f"{prefix}.{key} must be {expected_type.__name__}"
         )
+
+
+def _validate_schema_value(value: Any, schema: dict[str, Any], path: str) -> None:
+    if "const" in schema and value != schema["const"]:
+        raise ContractValidationError(f"{path} must equal {schema['const']!r}")
+
+    expected_types = schema.get("type")
+    if expected_types is not None:
+        allowed = (
+            expected_types if isinstance(expected_types, list) else [expected_types]
+        )
+        if not any(_matches_schema_type(value, item) for item in allowed):
+            allowed_text = " or ".join(str(item) for item in allowed)
+            raise ContractValidationError(f"{path} must be {allowed_text}")
+
+    if isinstance(value, str) and "minLength" in schema:
+        if len(value) < int(schema["minLength"]):
+            raise ContractValidationError(
+                f"{path} must contain at least {schema['minLength']} character(s)"
+            )
+
+    if isinstance(value, list):
+        if "minItems" in schema and len(value) < int(schema["minItems"]):
+            raise ContractValidationError(
+                f"{path} must contain at least {schema['minItems']} item(s)"
+            )
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                _validate_schema_value(item, item_schema, f"{path}[{index}]")
+
+    if not isinstance(value, dict):
+        return
+
+    for key in schema.get("required", []):
+        if key not in value:
+            raise ContractValidationError(f"{path} missing required field: {key}")
+
+    properties = schema.get("properties", {})
+    for key, item in value.items():
+        item_schema = properties.get(key)
+        if isinstance(item_schema, dict):
+            _validate_schema_value(item, item_schema, f"{path}.{key}")
+            continue
+        additional = schema.get("additionalProperties", True)
+        if additional is False:
+            raise ContractValidationError(f"{path} has unsupported field: {key}")
+        if isinstance(additional, dict):
+            _validate_schema_value(item, additional, f"{path}.{key}")
+
+
+def _matches_schema_type(value: Any, expected: str) -> bool:
+    if expected == "object":
+        return isinstance(value, dict)
+    if expected == "array":
+        return isinstance(value, list)
+    if expected == "string":
+        return isinstance(value, str)
+    if expected == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if expected == "boolean":
+        return isinstance(value, bool)
+    if expected == "null":
+        return value is None
+    raise ContractValidationError(f"unsupported contract schema type: {expected}")

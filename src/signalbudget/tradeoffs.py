@@ -9,7 +9,6 @@ from signalbudget.freshness import pricing_freshness
 from signalbudget.loaders import CatalogBundle
 from signalbudget.pareto import analyze_pareto
 
-
 LAB_ESTIMATE_CAVEAT = (
     "Cost estimates are lab-derived from 24-hour VM measurements and are not "
     "production forecasts."
@@ -19,7 +18,7 @@ LAB_ESTIMATE_CAVEAT = (
 def build_tradeoff_report(
     bundle: CatalogBundle,
     validated_rule_ids: set[str] | None = None,
-) -> dict[str, object]:
+) -> dict[str, Any]:
     freshness = pricing_freshness(bundle.pricing)
     source_costs = estimate_monthly_source_costs(
         bundle.source_volumes,
@@ -74,7 +73,7 @@ def source_removal_losses(
     log_source_catalog: dict[str, Any],
     detection_catalog: dict[str, Any],
     question_catalog: dict[str, Any],
-) -> list[dict[str, object]]:
+) -> list[dict[str, Any]]:
     all_sources = {source["id"] for source in log_source_catalog.get("sources", [])}
     baseline_detections = detection_readiness(
         detection_catalog,
@@ -86,7 +85,7 @@ def source_removal_losses(
         all_sources,
         log_source_catalog,
     )
-    losses: list[dict[str, object]] = []
+    losses: list[dict[str, Any]] = []
     for source_id in sorted(all_sources):
         remaining = all_sources - {source_id}
         remaining_detections = detection_readiness(
@@ -120,13 +119,13 @@ def source_removal_losses(
 
 
 def frontier_tradeoffs(
-    configurations: list[dict[str, object]],
-    non_dominated: list[dict[str, object]],
+    configurations: list[dict[str, Any]],
+    non_dominated: list[dict[str, Any]],
     detection_catalog: dict[str, Any],
     question_catalog: dict[str, Any],
-) -> list[dict[str, object]]:
+) -> list[dict[str, Any]]:
     by_id = {config["configuration_id"]: config for config in configurations}
-    narratives: list[dict[str, object]] = []
+    narratives: list[dict[str, Any]] = []
     frontier = [by_id[config["configuration_id"]] for config in non_dominated]
     if not frontier:
         return narratives
@@ -149,7 +148,7 @@ def frontier_tradeoffs(
         }
     )
 
-    for previous, current in zip(frontier, frontier[1:]):
+    for previous, current in zip(frontier, frontier[1:], strict=False):
         transition = _frontier_transition(
             previous,
             current,
@@ -193,11 +192,11 @@ def render_tradeoff_markdown(report: dict[str, Any]) -> str:
 
 
 def _frontier_transition(
-    previous: dict[str, object],
-    current: dict[str, object],
+    previous: dict[str, Any],
+    current: dict[str, Any],
     detection_catalog: dict[str, Any],
     question_catalog: dict[str, Any],
-) -> dict[str, object]:
+) -> dict[str, Any]:
     previous_sources = set(previous["selected_sources"])
     current_sources = set(current["selected_sources"])
     previous_detections = previous["detection_readiness"]
@@ -262,7 +261,7 @@ def _frontier_transition(
     }
 
 
-def _baseline_text(config: dict[str, object]) -> str:
+def _baseline_text(config: dict[str, Any]) -> str:
     return (
         f"Baseline: `{config['configuration_id']}` costs "
         f"${float(config['estimated_monthly_proxy_cost_usd']):.8f}/month "
@@ -273,8 +272,8 @@ def _baseline_text(config: dict[str, object]) -> str:
 
 
 def _transition_text(
-    previous: dict[str, object],
-    current: dict[str, object],
+    previous: dict[str, Any],
+    current: dict[str, Any],
     cost_delta: float,
     added_detection_ids: list[str],
     lost_detection_ids: list[str],
@@ -292,7 +291,7 @@ def _transition_text(
     )
 
 
-def _detection_summary(detection: dict[str, Any]) -> dict[str, object]:
+def _detection_summary(detection: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": detection["id"],
         "slug": detection.get("slug"),
@@ -304,7 +303,7 @@ def _detection_summary(detection: dict[str, Any]) -> dict[str, object]:
     }
 
 
-def _question_summary(question: dict[str, Any]) -> dict[str, object]:
+def _question_summary(question: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": question["id"],
         "question": question["question"],
@@ -332,12 +331,12 @@ def _summaries_by_id(
     items: list[dict[str, Any]],
     item_ids: list[str],
     summary_fn: Any,
-) -> list[dict[str, object]]:
+) -> list[dict[str, Any]]:
     selected = set(item_ids)
     return [summary_fn(item) for item in items if item["id"] in selected]
 
 
-def _id_lines(items: list[dict[str, object]]) -> list[str]:
+def _id_lines(items: list[dict[str, Any]]) -> list[str]:
     if not items:
         return ["- none"]
     return [f"- `{item['id']}`" for item in items]

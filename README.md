@@ -61,7 +61,6 @@ python -m unittest discover -s signalbudget\integration_tests
 Expected test result:
 
 ```text
-Ran 27 tests
 OK
 ```
 
@@ -71,8 +70,12 @@ OK
 - `artifacts/phase-9/pareto-analysis.md`
 - `artifacts/phase-10/tradeoff-explanations.json`
 - `artifacts/phase-10/tradeoff-explanations.md`
-- `evidence/portfolio-v0-evidence.zip`
 - `evidence/README.md`
+
+The historical VM evidence archive is a release artifact and is not committed
+to this source repository. Its provenance and checksum are recorded in
+`docs/phase-11-vm-validation.md`; the generated SignalBudget reports remain
+checked in under `artifacts/`.
 
 Current result:
 
@@ -105,6 +108,24 @@ SignalBudget uses real artifacts, but it labels their scope carefully:
 - Only the Sysmon encoded PowerShell detection is DetFuzz-validated in v0.
 - PowerShell Script Block and Windows Security detections are catalog-declared,
   not DetFuzz-validated.
+
+Strict evidence verification requires an explicit `--evidence-root`.
+SignalBudget never follows the absolute root embedded in an imported manifest,
+and rejects absolute, traversal, duplicate, missing, incorrectly sized, or
+hash-mismatched evidence entries.
+
+## Release Verification
+
+```powershell
+python -m pip install -c constraints.txt -e ".[dev]"
+python -m ruff check src tests integration_tests
+python -m mypy src
+python -m unittest discover -s tests -v
+python -m signalbudget.cli summarize
+```
+
+Catalog, measurement, pricing, and contract files are included in the Python
+package, so the installed CLI does not depend on the repository checkout.
 
 ## Documentation
 

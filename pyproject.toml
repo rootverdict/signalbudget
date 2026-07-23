@@ -11,8 +11,35 @@ requires-python = ">=3.11"
 authors = [{ name = "SignalBudget contributors" }]
 dependencies = []
 
+[project.optional-dependencies]
+dev = [
+  "mypy==2.3.0",
+  "ruff==0.15.22",
+]
+
 [project.scripts]
 signalbudget = "signalbudget.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+signalbudget = [
+  "data/catalog/*.yaml",
+  "data/contracts/*.json",
+  "data/measurements/*.yaml",
+  "data/pricing/*.yaml",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true

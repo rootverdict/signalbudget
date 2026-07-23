@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 
 from detfuzz.report import write_report_bundle
-from signalbudget.contracts import validate_detfuzz_result_file
 
+from signalbudget.contracts import validate_detfuzz_result_file
 
 EXPECTED_RULE_ID = "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62"
 EXPECTED_RULE_SLUG = "detfuzz-v0-powershell-encoded-command"

@@ -28,7 +28,6 @@ python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --d
 ## Final Expected Result
 
 ```text
-Ran 27 tests
 OK
 suite_status: COMPLETED
 evidence_files_checked: 63

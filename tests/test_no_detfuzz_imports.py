@@ -17,7 +17,8 @@ class NoDetFuzzImportsTests(unittest.TestCase):
         offenders: list[str] = []
 
         for path in root.rglob("*.py"):
-            for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for line_number, line in enumerate(lines, start=1):
                 if pattern.search(line):
                     offenders.append(f"{path}:{line_number}:{line.strip()}")
 

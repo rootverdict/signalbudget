@@ -102,7 +102,6 @@ Removing sysmon_process_create loses rule
 The final expected test result is:
 
 ```text
-Ran 27 tests
 OK
 ```
 
@@ -112,7 +111,8 @@ Final Phase 9 and Phase 10 reports are backed by the real DetFuzz Windows VM
 suite `dc017824-0d4e-41d0-9d32-610b410accb0`, not by the strict test fixture.
 See `docs/phase-11-vm-validation.md` for the final evidence package details.
 
-The final evidence archive is:
+The historical external release archive is not committed to this source
+repository. Its recorded release name and checksum are:
 
 ```text
 portfolio-v0-evidence.zip
@@ -127,7 +127,7 @@ generated from that same suite report.
 Final validation:
 
 ```text
-SignalBudget tests: 27 passed
+SignalBudget unit tests: pass
 Cross-project integration: 1 passed
 Strict DetFuzz contract: 63/63 evidence hashes verified
 ```

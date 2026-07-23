@@ -1,0 +1,24 @@
+schema_version: "1.0"
+detections:
+  - id: d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62
+    slug: "detfuzz-v0-powershell-encoded-command"
+    title: "PowerShell EncodedCommand Process Creation"
+    technique: "T1059.001"
+    dependency_status: "validated_by_detfuzz"
+    required_sources: [sysmon_process_create]
+    required_fields: [Image, CommandLine]
+    validated_artifacts: [detfuzz_phase6_b0_report, detfuzz_phase7_benign_results]
+  - id: powershell_script_block_encoded_activity
+    title: "PowerShell encoded activity script content review"
+    technique: "T1059.001"
+    dependency_status: "declared_not_validated"
+    required_sources: [powershell_script_block]
+    required_fields: [ScriptBlockText, ScriptBlockId]
+    validated_artifacts: []
+  - id: windows_failed_logon_context
+    title: "Windows failed logon context"
+    technique: "T1110"
+    dependency_status: "declared_not_validated"
+    required_sources: [windows_security_logon]
+    required_fields: [EventId, TargetUserName, LogonType, IpAddress, Status]
+    validated_artifacts: []

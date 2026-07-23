@@ -66,7 +66,6 @@ python -m unittest discover -s tests
 Expected:
 
 ```text
-Ran 27 tests
 OK
 ```
 

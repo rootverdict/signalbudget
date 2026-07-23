@@ -19,8 +19,12 @@ def project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def package_data_root() -> Path:
+    return Path(__file__).resolve().parent / "data"
+
+
 def load_catalog_bundle(root: Path | None = None) -> CatalogBundle:
-    base = root or project_root()
+    base = root if root is not None else package_data_root()
     return CatalogBundle(
         log_sources=load_restricted_yaml(base / "catalog" / "log_sources.yaml"),
         detection_dependencies=load_restricted_yaml(

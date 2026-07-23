@@ -10,7 +10,9 @@ portfolio-v0-evidence.zip
 SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
 ```
 
-The evidence archive is embedded in the final project zips at:
+The archive was produced as a historical portfolio release artifact. It is not
+committed to this source repository; the paths used in the original packaged
+release were:
 
 ```text
 evidence/portfolio-v0-evidence.zip

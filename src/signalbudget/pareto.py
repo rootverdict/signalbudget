@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 
-def analyze_pareto(configurations: list[dict[str, object]]) -> dict[str, object]:
+def analyze_pareto(configurations: list[dict[str, Any]]) -> dict[str, Any]:
     complete_cost = [
         config
         for config in configurations
@@ -37,7 +37,11 @@ def analyze_pareto(configurations: list[dict[str, object]]) -> dict[str, object]
 
     return {
         "schema_version": "1.0",
-        "analysis_method": "Pareto frontier over cost, validated detection coverage, and investigation utility. Lower cost is better; higher coverage and utility are better.",
+        "analysis_method": (
+            "Pareto frontier over cost, validated detection coverage, and "
+            "investigation utility. Lower cost is better; higher coverage and "
+            "utility are better."
+        ),
         "cost_boundary": _cost_boundary(len(incomplete_cost)),
         "configuration_count": len(configurations),
         "complete_cost_configuration_count": len(complete_cost),
@@ -74,7 +78,7 @@ def _cost_boundary(incomplete_count: int) -> str:
     )
 
 
-def dominates(candidate: dict[str, object], other: dict[str, object]) -> bool:
+def dominates(candidate: dict[str, Any], other: dict[str, Any]) -> bool:
     candidate_cost = candidate.get("estimated_monthly_cost_usd")
     other_cost = other.get("estimated_monthly_cost_usd")
     if candidate_cost is None or other_cost is None:
@@ -101,9 +105,9 @@ def dominates(candidate: dict[str, object], other: dict[str, object]) -> bool:
 
 
 def _annotate_complete_configuration(
-    config: dict[str, object],
-    complete_cost_configs: list[dict[str, object]],
-) -> dict[str, object]:
+    config: dict[str, Any],
+    complete_cost_configs: list[dict[str, Any]],
+) -> dict[str, Any]:
     dominators = [
         other["configuration_id"]
         for other in complete_cost_configs
@@ -119,7 +123,7 @@ def _annotate_complete_configuration(
     return annotated
 
 
-def _annotate_incomplete_configuration(config: dict[str, object]) -> dict[str, object]:
+def _annotate_incomplete_configuration(config: dict[str, Any]) -> dict[str, Any]:
     annotated = _summary(config)
     annotated["pareto_status"] = "PARETO_PENDING_COST"
     annotated["dominated_by"] = []
@@ -130,7 +134,7 @@ def _annotate_incomplete_configuration(config: dict[str, object]) -> dict[str, o
     return annotated
 
 
-def _summary(config: dict[str, object]) -> dict[str, object]:
+def _summary(config: dict[str, Any]) -> dict[str, Any]:
     metrics = _metrics(config)
     return {
         "configuration_id": config["configuration_id"],
@@ -148,7 +152,7 @@ def _summary(config: dict[str, object]) -> dict[str, object]:
     }
 
 
-def _metrics(config: dict[str, object]) -> dict[str, int]:
+def _metrics(config: dict[str, Any]) -> dict[str, int]:
     return {
         "validated_detection_count": int(config.get("validated_detection_count", 0)),
         "telemetry_ready_detection_count": int(
@@ -202,7 +206,7 @@ def render_pareto_markdown(analysis: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _config_line(config: dict[str, object]) -> str:
+def _config_line(config: dict[str, Any]) -> str:
     proxy_cost = config.get(
         "estimated_monthly_proxy_cost_usd",
         config.get("estimated_monthly_cost_usd"),

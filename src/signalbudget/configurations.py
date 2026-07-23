@@ -6,7 +6,6 @@ from typing import Any
 from signalbudget.costing import summarize_selected_source_costs
 from signalbudget.coverage import detection_readiness, investigation_readiness
 
-
 VALIDATED_DEPENDENCY_STATUS = "validated_by_detfuzz"
 
 

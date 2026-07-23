@@ -39,7 +39,10 @@ def summarize(args: argparse.Namespace) -> None:
         "investigation_readiness": investigation_readiness(
             bundle.investigation_questions, sources, bundle.log_sources
         ),
-        "boundary": "SignalBudget consumes exported DetFuzz JSON; it must not import detfuzz.* code.",
+        "boundary": (
+            "SignalBudget consumes exported DetFuzz JSON; "
+            "it must not import detfuzz.* code."
+        ),
     }
     print(json.dumps(payload, indent=2, sort_keys=True))
 
@@ -59,17 +62,18 @@ def configurations(args: argparse.Namespace) -> None:
         bundle.source_volumes,
         bundle.pricing,
     )
+    configuration_payload = enumerate_source_configurations(
+        bundle.log_sources,
+        bundle.detection_dependencies,
+        bundle.investigation_questions,
+        source_costs,
+    )
     payload = {
         "schema_version": "1.0",
-        "configuration_count": 8,
+        "configuration_count": len(configuration_payload),
         "cost_boundary": cost_boundary_text(source_costs),
         "source_costs": source_costs,
-        "configurations": enumerate_source_configurations(
-            bundle.log_sources,
-            bundle.detection_dependencies,
-            bundle.investigation_questions,
-            source_costs,
-        ),
+        "configurations": configuration_payload,
     }
     print(json.dumps(payload, indent=2, sort_keys=True))
 

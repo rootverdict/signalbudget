@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out SignalBudget
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install quality tools
+        run: python -m pip install -c constraints.txt mypy ruff
+
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps --wheel-dir dist
+
+      - name: Install wheel
+        run: python -m pip install dist/*.whl
+
+      - name: Test installed CLI outside the repository
+        working-directory: ${{ runner.temp }}
+        run: signalbudget summarize
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Lint
+        run: python -m ruff check src tests integration_tests
+
+      - name: Type-check
+        run: python -m mypy src
+
+      - name: Check out DetFuzz
+        uses: actions/checkout@v4
+        with:
+          repository: rootverdict/detfuzz
+          path: detfuzz
+
+      - name: Install DetFuzz
+        run: python -m pip install ./detfuzz
+
+      - name: Run cross-project contract test
+        run: python -m unittest discover -s integration_tests -v

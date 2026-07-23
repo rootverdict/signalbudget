@@ -1,0 +1,3 @@
+# Direct tool pin used by CI and local release verification.
+mypy==2.3.0
+ruff==0.15.22

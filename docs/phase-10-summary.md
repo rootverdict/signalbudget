@@ -18,7 +18,7 @@ Phase 10 adds pricing freshness and generated tradeoff explanations.
 
 ```powershell
 $env:PYTHONPATH='src'
-Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216-posix.zip -DestinationPath build\v1-evidence
 $run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
 python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```

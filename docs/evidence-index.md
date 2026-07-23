@@ -30,10 +30,10 @@ DetFuzz code.
 
 ## Latest VM Evidence
 
-`evidence/detfuzz-signalbudget-results-20260723-212216.zip`
+`evidence/detfuzz-signalbudget-results-20260723-212216-posix.zip`
 
 ```text
-SHA256 6598a2e5e5fa9c71c5d21948ccea35ea812088a720a6100197c513d034ed034a
+SHA256 2570ce74dd2d49d4af708b7a1153278c2aa01622e0b6fd1896c0787a3ceb4d4d
 suite_id 4ddc2989-4c84-49fe-801e-996c67a5702f
 suite_status COMPLETED
 evidence_files_checked 63

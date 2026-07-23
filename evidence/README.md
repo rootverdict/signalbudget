@@ -3,8 +3,8 @@
 The latest local evidence package is:
 
 ```text
-detfuzz-signalbudget-results-20260723-212216.zip
-SHA256 6598a2e5e5fa9c71c5d21948ccea35ea812088a720a6100197c513d034ed034a
+detfuzz-signalbudget-results-20260723-212216-posix.zip
+SHA256 2570ce74dd2d49d4af708b7a1153278c2aa01622e0b6fd1896c0787a3ceb4d4d
 ```
 
 It contains the completed DetFuzz Windows VM suite
@@ -24,7 +24,7 @@ legacy_preliminary_classifications_accepted: M1
 Extract and validate the archive from the repository root:
 
 ```powershell
-Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216-posix.zip -DestinationPath build\v1-evidence
 $run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
 python -m signalbudget.cli validate-detfuzz `
   --path "$run\reports\suite-report.json" `

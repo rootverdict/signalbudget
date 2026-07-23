@@ -22,7 +22,7 @@ SignalBudget consumes DetFuzz JSON through a schema:
 ```powershell
 $env:PYTHONPATH='src'
 python -m signalbudget.cli validate-detfuzz --path tests\fixtures\benign-results.json
-Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216-posix.zip -DestinationPath build\v1-evidence
 $run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
 python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
 ```

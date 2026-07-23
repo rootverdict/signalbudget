@@ -20,9 +20,11 @@ Phase 11 completes the SignalBudget documentation and demo package.
 ```powershell
 $env:PYTHONPATH='src'
 python -m unittest discover -s tests
-python -m signalbudget.cli validate-detfuzz --path C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence --require-suite-contract
-python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
-python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+$run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
+python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
+python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
+python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```
 
 ## Final Expected Result

@@ -146,6 +146,58 @@ class ContractTests(unittest.TestCase):
                     require_suite_contract=True,
                 )
 
+    def test_strict_suite_contract_accepts_legacy_preliminary_bypass_record(
+        self,
+    ) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_root = Path(directory) / "evidence"
+            shutil.copytree(FIXTURES / "evidence", evidence_root)
+            record_path = evidence_root / "M1" / "case-record.json"
+            record = json.loads(record_path.read_text(encoding="utf-8-sig"))
+            record["classification"] = "CANDIDATE_VALID_BYPASS"
+            record["preliminary_classification"] = "CANDIDATE_VALID_BYPASS"
+            record_path.write_text(json.dumps(record), encoding="utf-8")
+            _update_manifest_item(payload, "M1/case-record.json", record_path)
+
+            summary = validate_detfuzz_result(
+                payload,
+                evidence_root=evidence_root,
+                require_suite_contract=True,
+            )
+
+        self.assertEqual(
+            summary["legacy_preliminary_classifications_accepted"],
+            ["M1"],
+        )
+
+    def test_strict_suite_contract_rejects_unmarked_preliminary_bypass_record(
+        self,
+    ) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_root = Path(directory) / "evidence"
+            shutil.copytree(FIXTURES / "evidence", evidence_root)
+            record_path = evidence_root / "M1" / "case-record.json"
+            record = json.loads(record_path.read_text(encoding="utf-8-sig"))
+            record["classification"] = "CANDIDATE_VALID_BYPASS"
+            record_path.write_text(json.dumps(record), encoding="utf-8")
+            _update_manifest_item(payload, "M1/case-record.json", record_path)
+
+            with self.assertRaisesRegex(
+                ContractValidationError,
+                "classification does not match case-record.json",
+            ):
+                validate_detfuzz_result(
+                    payload,
+                    evidence_root=evidence_root,
+                    require_suite_contract=True,
+                )
+
     def test_strict_suite_contract_rejects_missing_case_evidence(self) -> None:
         payload_path = FIXTURES / "full-suite-report.json"
         payload = json.loads(payload_path.read_text(encoding="utf-8-sig"))

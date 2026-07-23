@@ -1,6 +1,6 @@
 # Source Volume Measurement
 
-SignalBudget now includes 24-hour lab VM measurements for all three v0 sources.
+SignalBudget v1 includes 24-hour lab VM measurements for all three sources.
 These measurements make the Phase 9 Pareto frontier complete, but they remain
 lab estimates rather than production forecasts.
 

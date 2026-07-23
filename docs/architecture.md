@@ -23,7 +23,7 @@ versioned so future DetFuzz changes do not silently break SignalBudget.
 
 `catalog/log_sources.yaml`
 
-Defines the three v0 telemetry sources.
+Defines the three v1 telemetry sources.
 
 `catalog/detection_dependencies.yaml`
 

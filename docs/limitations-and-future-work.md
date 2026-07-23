@@ -10,7 +10,7 @@ as production billing forecasts.
 
 `Only three log sources are modeled`
 
-SignalBudget v0 includes:
+SignalBudget v1 includes:
 
 ```text
 sysmon_process_create
@@ -35,7 +35,7 @@ not validated by DetFuzz evidence yet.
 
 `The Pareto result depends on catalog scope`
 
-The current Pareto frontier is correct for the three-source v0 catalog and the
+The current Pareto frontier is correct for the three-source v1 catalog and the
 current investigation-question set. Adding new detections, questions, or log
 sources can change the frontier.
 

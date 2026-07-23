@@ -61,5 +61,13 @@ case summaries matching case-record, marker, telemetry, executable-identity,
 and detection-result evidence
 ```
 
+Older DetFuzz v0 runs wrote `CANDIDATE_VALID_BYPASS` to the hashed mutation
+case record before the closing B1 baseline finalized the suite-report value as
+`VALID_BYPASS`. SignalBudget accepts only that exact mutation transition when
+the case record also carries
+`preliminary_classification: CANDIDATE_VALID_BYPASS`. The validation summary
+lists every case accepted through this compatibility path. All other case
+record differences remain strict failures.
+
 This two-level contract allows partial and benign DetFuzz reports to be
 inspected without granting them validated detection coverage.

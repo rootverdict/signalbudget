@@ -1,6 +1,13 @@
-﻿# Evidence Index
+# Evidence Index
 
-This file lists the main evidence artifacts and what each one proves.
+This file maps SignalBudget v1 claims to locally verifiable evidence.
+
+## V1 Boundary
+
+`docs/v1-scope.md`
+
+Defines the required v1 capabilities, definition of done, exclusions, and v2
+backlog.
 
 ## DetFuzz Import Boundary
 
@@ -10,31 +17,41 @@ Defines the versioned DetFuzz JSON contract SignalBudget accepts.
 
 `tests/fixtures/benign-results.json`
 
-Fixture derived from DetFuzz Phase 7 benign evidence. Used to validate the data
-contract and false-positive findings.
+Exercises the base contract and benign classifications.
 
-`tests/fixtures/phase6-b0-suite-report.json`
+`tests/fixtures/full-suite-report.json` and `tests/fixtures/evidence/`
 
-Fixture representing the DetFuzz Phase 6 B0 encoded PowerShell result.
+Provide a portable strict-contract fixture.
 
 `tests/test_no_detfuzz_imports.py`
 
-Proves `src/signalbudget/` does not import `detfuzz.*` code. The repository
-`integration_tests/` directory is an explicit exception for cross-package
-compatibility checks and is not part of the installed SignalBudget package.
+Proves the deployable `src/signalbudget/` package does not import DetFuzz code.
+The repository-level `integration_tests/` directory is the explicit
+cross-project exception.
+
+## Latest VM Evidence
+
+`evidence/detfuzz-signalbudget-results-20260723-212216.zip`
+
+```text
+SHA256 6598a2e5e5fa9c71c5d21948ccea35ea812088a720a6100197c513d034ed034a
+suite_id 4ddc2989-4c84-49fe-801e-996c67a5702f
+suite_status COMPLETED
+evidence_files_checked 63
+evidence_hashes_verified true
+```
+
+The archive includes the raw Windows VM suite, evidence manifest, per-case
+evidence, calibration data, and generated SignalBudget outputs. The M1 case
+uses the explicitly reported legacy preliminary-classification compatibility
+described in `docs/data-contract.md`.
 
 ## Pricing Evidence
 
 `pricing/microsoft_sentinel_eastus_2026-07-23.yaml`
 
-Versioned Microsoft Sentinel pricing data with:
-
-```text
-retrieved_at
-effective_date
-max_age_days
-source_url
-```
+Stores the Microsoft Sentinel East US profile with retrieval, effective-date,
+source, and freshness metadata.
 
 `src/signalbudget/freshness.py`
 
@@ -58,14 +75,11 @@ These measurements are lab-scoped and not production forecasts.
 
 `artifacts/phase-9/pareto-analysis.json`
 
-Machine-readable Pareto result regenerated from the real DetFuzz VM suite
-`dc017824-0d4e-41d0-9d32-610b410accb0`.
+Machine-readable Pareto result regenerated from the latest VM suite.
 
 `artifacts/phase-9/pareto-analysis.md`
 
 Human-readable Pareto report.
-
-Current key claims:
 
 ```text
 configuration_count: 8
@@ -80,59 +94,21 @@ dominated: windows_security_logon
 `artifacts/phase-10/tradeoff-explanations.json`
 
 Machine-readable pricing freshness, source-removal losses, and frontier
-tradeoffs regenerated from the real DetFuzz VM suite
-`dc017824-0d4e-41d0-9d32-610b410accb0`.
+tradeoffs regenerated from the latest VM suite.
 
 `artifacts/phase-10/tradeoff-explanations.md`
 
 Human-readable tradeoff report.
 
-Current key claim:
-
-```text
-Removing sysmon_process_create loses rule
+Removing `sysmon_process_create` loses the validated rule
 `d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62`
 (`detfuzz-v0-powershell-encoded-command`).
-```
 
-## Test Evidence
+## Verification Evidence
 
-`tests/`
+`tests/` contains unit and regression tests.
 
-The final expected test result is:
+`integration_tests/` verifies DetFuzz-to-SignalBudget compatibility.
 
-```text
-OK
-```
-
-## VM Evidence Status
-
-Final Phase 9 and Phase 10 reports are backed by the real DetFuzz Windows VM
-suite `dc017824-0d4e-41d0-9d32-610b410accb0`, not by the strict test fixture.
-See `docs/phase-11-vm-validation.md` for the final evidence package details.
-
-The historical archive is not committed to or currently published by this
-source repository. Its recorded name and checksum are:
-
-```text
-portfolio-v0-evidence.zip
-SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
-```
-
-This checksum preserves provenance but does not make the archive independently
-retrievable. A fresh clone can verify the checked-in Phase 9/10 report hashes
-and run the synthetic strict-contract fixture; revalidating the historical raw
-VM suite requires a separately supplied copy of the archive.
-
-The archive contains clock preflight, the failed first calibration, the passing
-calibration retry, eight matched Sysmon XML events, the canonical DetFuzz suite
-report, a 63-file evidence manifest, and the SignalBudget Phase 9/10 reports
-generated from that same suite report.
-
-Final validation:
-
-```text
-SignalBudget unit tests: pass
-Cross-project integration: 1 passed
-Strict DetFuzz contract: 63/63 evidence hashes verified
-```
+`.github/workflows/ci.yml` builds and installs the wheel, runs the unit and
+integration suites, lints, and type-checks on Python 3.11.

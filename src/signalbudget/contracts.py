@@ -225,13 +225,22 @@ def _validate_evidence_manifest(
         checked += 1
         resolved_paths[normalized_path] = file_path
     _require_complete_case_evidence(manifest_paths)
+    legacy_preliminary_classifications: list[str] = []
     if cases is not None:
-        _validate_case_evidence(cases, resolved_paths)
-    return {
+        legacy_preliminary_classifications = _validate_case_evidence(
+            cases,
+            resolved_paths,
+        )
+    result: dict[str, object] = {
         "evidence_manifest_file_count": len(files),
         "evidence_hashes_verified": checked == len(files),
         "evidence_files_checked": checked,
     }
+    if legacy_preliminary_classifications:
+        result["legacy_preliminary_classifications_accepted"] = (
+            legacy_preliminary_classifications
+        )
+    return result
 
 
 def _hash_file(path: Path, chunk_size: int = 1024 * 1024) -> tuple[str, int]:
@@ -247,7 +256,8 @@ def _hash_file(path: Path, chunk_size: int = 1024 * 1024) -> tuple[str, int]:
 def _validate_case_evidence(
     cases: list[dict[str, Any]],
     resolved_paths: dict[str, Path],
-) -> None:
+) -> list[str]:
+    legacy_preliminary_classifications: list[str] = []
     for case in cases:
         case_id = str(case["case_id"])
         case_record = _load_case_evidence(
@@ -268,6 +278,12 @@ def _validate_case_evidence(
                 raise ContractValidationError(
                     f"{case_id} case-record.json missing required field: {field}"
                 )
+            if field == "classification" and _accepts_legacy_preliminary_classification(
+                case,
+                case_record,
+            ):
+                legacy_preliminary_classifications.append(case_id)
+                continue
             if case_record[field] != case[field]:
                 raise ContractValidationError(
                     f"{case_id} {field} does not match case-record.json"
@@ -308,6 +324,21 @@ def _validate_case_evidence(
             raise ContractValidationError(
                 f"{case_id} detection-result.json rule_id must be {EXPECTED_RULE_ID}"
             )
+    return legacy_preliminary_classifications
+
+
+def _accepts_legacy_preliminary_classification(
+    case: dict[str, Any],
+    case_record: dict[str, Any],
+) -> bool:
+    """Accept the exact pre-finalization shape emitted by older DetFuzz v0 runs."""
+    return (
+        case["case_id"] in MUTATION_CASE_IDS
+        and case["classification"] == "VALID_BYPASS"
+        and case_record.get("classification") == "CANDIDATE_VALID_BYPASS"
+        and case_record.get("preliminary_classification")
+        == "CANDIDATE_VALID_BYPASS"
+    )
 
 
 def _load_case_evidence(

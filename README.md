@@ -1,4 +1,4 @@
-# SignalBudget
+# SignalBudget v1
 
 SignalBudget is a cost-aware security telemetry planning tool. It answers a
 practical blue-team question:
@@ -43,12 +43,14 @@ python -m signalbudget.cli validate-detfuzz --path tests\fixtures\benign-results
 
 Those fixture commands are local smoke tests. The final portfolio artifacts
 under `artifacts/phase-9` and `artifacts/phase-10` were regenerated from the
-real DetFuzz VM suite:
+repository-local DetFuzz VM evidence archive. Extract it once:
 
 ```powershell
-python -m signalbudget.cli validate-detfuzz --path C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence --require-suite-contract
-python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
-python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+$run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
+python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
+python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
+python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```
 
 From the combined repository root, run the cross-project contract test:
@@ -72,11 +74,9 @@ OK
 - `artifacts/phase-10/tradeoff-explanations.md`
 - `evidence/README.md`
 
-The historical VM evidence archive is not committed or currently published by
-this source repository. Its recorded provenance and checksum are retained in
-`docs/phase-11-vm-validation.md`, but raw-evidence revalidation requires access
-to that archive. The generated SignalBudget reports remain checked in under
-`artifacts/` and their recorded hashes can be verified locally.
+The latest VM evidence archive is stored under `evidence/`, together with
+its SHA-256 checksum. A fresh clone can revalidate all 63 evidence files and
+regenerate the SignalBudget reports locally.
 
 Current result:
 
@@ -106,7 +106,7 @@ SignalBudget uses real artifacts, but it labels their scope carefully:
 - Microsoft Sentinel pricing is stored in versioned YAML with freshness fields.
 - Cost estimates are lab-derived from 24-hour VM measurements and are not
   production forecasts; XML-derived byte sizing is labeled as a proxy estimate.
-- Only the Sysmon encoded PowerShell detection is DetFuzz-validated in v0.
+- Only the Sysmon encoded PowerShell detection is DetFuzz-validated in v1.
 - PowerShell Script Block and Windows Security detections are catalog-declared,
   not DetFuzz-validated.
 
@@ -130,6 +130,7 @@ package, so the installed CLI does not depend on the repository checkout.
 
 ## Documentation
 
+- `docs/v1-scope.md`
 - `docs/architecture.md`
 - `docs/demo-script.md`
 - `docs/evidence-index.md`
@@ -147,4 +148,5 @@ SignalBudget Phase 8: catalog, contract, pricing
 SignalBudget Phase 9: complete Pareto analysis
 SignalBudget Phase 10: freshness and loss explanations
 SignalBudget Phase 11: documentation and demo package
+SignalBudget v1: locally complete
 ```

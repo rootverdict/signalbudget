@@ -85,10 +85,13 @@
     "evidence_files_checked": 63,
     "evidence_hashes_verified": true,
     "evidence_manifest_file_count": 63,
+    "legacy_preliminary_classifications_accepted": [
+      "M1"
+    ],
     "rule_id": "d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62",
     "rule_slug": "detfuzz-v0-powershell-encoded-command",
     "schema_version": "1.0",
-    "suite_id": "dc017824-0d4e-41d0-9d32-610b410accb0",
+    "suite_id": "4ddc2989-4c84-49fe-801e-996c67a5702f",
     "suite_status": "COMPLETED",
     "telemetry": "Microsoft-Windows-Sysmon/Operational",
     "validated_rule_ids": [
@@ -439,7 +442,7 @@
     "fresh": true,
     "max_age_days": 90,
     "reason": "PRICING_WITHIN_MAX_AGE",
-    "retrieved_at": "2026-07-21T00:00:00Z",
+    "retrieved_at": "2026-07-23T00:00:00Z",
     "status": "PRICING_FRESH"
   },
   "pricing_status": "PRICING_FRESH",

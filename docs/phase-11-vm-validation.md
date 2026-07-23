@@ -1,34 +1,25 @@
 # Phase 11 VM Validation
 
-This document records the final portfolio evidence package for SignalBudget and
+This document records the final local evidence package for SignalBudget v1 and
 its DetFuzz input.
 
 ## Evidence Package
 
 ```text
-portfolio-v0-evidence.zip
-SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
+evidence/detfuzz-signalbudget-results-20260723-212216.zip
+SHA256 6598a2e5e5fa9c71c5d21948ccea35ea812088a720a6100197c513d034ed034a
+entries: 121
+uncompressed bytes: 265658
+unsafe archive paths: 0
 ```
 
-The archive was produced as a historical portfolio artifact. It is not
-committed to or currently published by this source repository; the paths used
-in the original package were:
-
-```text
-evidence/portfolio-v0-evidence.zip
-evidence/portfolio-v0-evidence.sha256.txt
-```
-
-The checksum above is retained as a provenance record. It does not provide
-independent access to the archive. Raw-evidence revalidation from a fresh clone
-therefore requires a separately supplied copy of `portfolio-v0-evidence.zip`.
+The archive is included locally, so a fresh checkout containing the file can
+independently verify the raw evidence and regenerate the reports.
 
 ## DetFuzz VM Run
 
-The real Windows VM suite is:
-
 ```text
-suite_id: dc017824-0d4e-41d0-9d32-610b410accb0
+suite_id: 4ddc2989-4c84-49fe-801e-996c67a5702f
 suite_status: COMPLETED
 abort_reason: null
 host: DetFuzz-Win11-Lab
@@ -48,9 +39,6 @@ NC1 INVALID_MUTANT
 B1  DETECTED
 ```
 
-The archive contains one matched Sysmon Event ID 1 XML file for each of the
-eight cases.
-
 ## Preflight And Calibration
 
 Clock preflight passed:
@@ -58,37 +46,38 @@ Clock preflight passed:
 ```text
 status: PASS
 reason: CLOCK_SYNC_OK
-offset_ms: 313
+offset_ms: 249
 time_sync_source: time.windows.com,0x9
 ```
 
-The first calibration is retained as evidence because it failed honestly: three
-of twenty baseline runs timed out during telemetry correlation under the initial
-polling window.
-
-The retry calibration passed:
+Calibration passed:
 
 ```text
 status: PASS
 reason: CALIBRATION_HEALTHY
 runs_completed: 20
-selected telemetry_query timeout: 74 seconds
+maximum_stable_timeout_seconds: 120
 ```
 
-The final DetFuzz suite used the Python-written passing calibration file:
+## Classification Compatibility
 
-```text
-C:\DetFuzz\portfolio-v0\calibration-pass\4fd3d9d8-a9f7-4d5f-91bc-40a6232f2e8e\timeout-calibration.json
-```
+This DetFuzz producer finalized M1 as `VALID_BYPASS` in `suite-results.json`
+and `suite-report.json`, while the hashed M1 `case-record.json` retained the
+preliminary value `CANDIDATE_VALID_BYPASS`.
+
+SignalBudget accepts only this exact mutation-case transition when
+`preliminary_classification` also equals `CANDIDATE_VALID_BYPASS` and the
+closing B1 baseline is healthy. The archive itself is not modified. The strict
+validation result exposes the compatibility decision rather than hiding it.
 
 ## SignalBudget Validation
 
-SignalBudget consumed the real DetFuzz suite report:
-
 ```powershell
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+$run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
 python -m signalbudget.cli validate-detfuzz `
-  --path C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json `
-  --evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence `
+  --path "$run\reports\suite-report.json" `
+  --evidence-root "$run\evidence" `
   --require-suite-contract
 ```
 
@@ -99,22 +88,20 @@ suite_status: COMPLETED
 evidence_files_checked: 63
 evidence_hashes_verified: true
 validated_rule_ids: d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62
+legacy_preliminary_classifications_accepted: M1
 ```
 
 ## Generated Reports
 
 The checked-in reports under `artifacts/phase-9` and `artifacts/phase-10` were
-regenerated from the real DetFuzz suite above.
-
-The JSON reports are byte-for-byte identical to the copies inside the evidence
-archive:
+regenerated from this VM suite:
 
 ```text
 artifacts/phase-9/pareto-analysis.json
-SHA256 5acb16cf4a8019cb6ff4bfa5ff2f3768f8bc687ae7824e236711781d44161703
+SHA256 b47d5bab826c218802b02c9e18c5654af2f17bf441c1c49ea1e02c2dfb017daf
 
 artifacts/phase-10/tradeoff-explanations.json
-SHA256 a2d1d19be6b3a49d6b48fd37ae0d3bd9f3cdbd254bb335c08c98732c100e22d6
+SHA256 1ace22d2886ec5fc885c866402f5f7f2ee9dac5920d8c618596b948a6c3463d3
 ```
 
 ## Boundary

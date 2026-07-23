@@ -8,7 +8,7 @@ sources:
     source_type: "endpoint_process"
     collection_status: "validated_in_detfuzz_lab"
     required_fields: [UtcTime, ProcessGuid, ProcessId, Image, CommandLine, ParentImage, ParentProcessGuid, ParentProcessId, User, LogonGuid, LogonId, Hashes]
-    phase8_measurement_status: "single_event_evidence_only"
+    volume_measurement_status: "lab_24h_measurement"
   - id: powershell_script_block
     display_name: "PowerShell Script Block Logging"
     provider: "Microsoft-Windows-PowerShell"
@@ -17,7 +17,7 @@ sources:
     source_type: "script_content"
     collection_status: "cataloged_not_vm_validated"
     required_fields: [TimeCreated, ProviderName, EventId, ScriptBlockText, ScriptBlockId, Path, UserId]
-    phase8_measurement_status: "pending_vm_measurement"
+    volume_measurement_status: "lab_24h_measurement"
   - id: windows_security_logon
     display_name: "Windows Security Logon Events"
     provider: "Microsoft-Windows-Security-Auditing"
@@ -26,4 +26,4 @@ sources:
     source_type: "authentication"
     collection_status: "cataloged_not_vm_validated"
     required_fields: [TimeCreated, EventId, TargetUserName, TargetDomainName, LogonType, IpAddress, WorkstationName, Status, SubjectUserName]
-    phase8_measurement_status: "pending_vm_measurement"
+    volume_measurement_status: "lab_24h_measurement"

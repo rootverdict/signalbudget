@@ -22,7 +22,9 @@ SignalBudget consumes DetFuzz JSON through a schema:
 ```powershell
 $env:PYTHONPATH='src'
 python -m signalbudget.cli validate-detfuzz --path tests\fixtures\benign-results.json
-python -m signalbudget.cli validate-detfuzz --path C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence --require-suite-contract
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+$run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
+python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
 ```
 
 Emphasize:
@@ -48,7 +50,7 @@ catalog/detection_dependencies.yaml
 catalog/investigation_questions.yaml
 ```
 
-Explain that v0 uses three sources only:
+Explain that v1 uses three sources only:
 
 ```text
 Sysmon Process Create
@@ -78,7 +80,7 @@ tests/test_no_detfuzz_imports.py
 ## 5. Generate The Pareto Analysis
 
 ```powershell
-python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
+python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```
 
 Open:
@@ -115,7 +117,7 @@ This is a lab-volume finding, not a general production claim.
 ## 7. Generate Tradeoff Explanations
 
 ```powershell
-python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\reports\suite-report.json --detfuzz-evidence-root C:\DetFuzz\portfolio-v0\runs\dc017824-0d4e-41d0-9d32-610b410accb0\evidence
+python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 ```
 
 Open:
@@ -138,7 +140,7 @@ frontier transitions in non-decreasing cost order
 End with:
 
 ```text
-SignalBudget demonstrates a data-driven method for telemetry planning. The v0
+SignalBudget demonstrates a data-driven method for telemetry planning. The v1
 numbers are lab-derived from a 24-hour VM window, so they prove the workflow and
 not a production bill forecast.
 ```

@@ -1,53 +1,53 @@
-# SignalBudget v0 Evidence Index
+# SignalBudget v1 Evidence Index
 
-This source repository contains the generated human-readable evidence reports:
-
-```text
-evidence/pareto-analysis.md
-evidence/tradeoff-explanations.md
-```
-
-The historical raw VM archive is not committed to or currently published by
-this repository. Its recorded name and checksum are:
+The latest local evidence package is:
 
 ```text
-portfolio-v0-evidence.zip
-SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
+detfuzz-signalbudget-results-20260723-212216.zip
+SHA256 6598a2e5e5fa9c71c5d21948ccea35ea812088a720a6100197c513d034ed034a
 ```
 
-SignalBudget's checked-in Phase 9 and Phase 10 artifacts were regenerated from
-the real DetFuzz VM suite:
+It contains the completed DetFuzz Windows VM suite
+`4ddc2989-4c84-49fe-801e-996c67a5702f`, its evidence manifest, 63 hashed
+evidence files, calibration results, and the generated SignalBudget reports.
+
+The DetFuzz producer used for this run retained
+`CANDIDATE_VALID_BYPASS` in the hashed M1 case record before the closing B1
+baseline finalized the suite-report classification as `VALID_BYPASS`.
+SignalBudget v1 recognizes only this exact preliminary-to-final transition and
+reports it as:
 
 ```text
-dc017824-0d4e-41d0-9d32-610b410accb0
+legacy_preliminary_classifications_accepted: M1
 ```
 
-The checksum is a provenance record, not a download mechanism. Without a copy
-of the archive, a fresh clone can verify the checked-in report hashes and the
-synthetic strict-contract fixture, but cannot independently rerun verification
-of the historical raw VM evidence.
+Extract and validate the archive from the repository root:
 
-The external evidence archive contains:
-
-```text
-runs/dc017824-0d4e-41d0-9d32-610b410accb0/reports/suite-report.json
-runs/dc017824-0d4e-41d0-9d32-610b410accb0/reports/evidence-manifest.json
-runs/dc017824-0d4e-41d0-9d32-610b410accb0/evidence/*/matched-sysmon-event.xml
-signalbudget/phase-9/pareto-analysis.json
-signalbudget/phase-10/tradeoff-explanations.json
+```powershell
+Expand-Archive evidence\detfuzz-signalbudget-results-20260723-212216.zip -DestinationPath build\v1-evidence
+$run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
+python -m signalbudget.cli validate-detfuzz `
+  --path "$run\reports\suite-report.json" `
+  --evidence-root "$run\evidence" `
+  --require-suite-contract
 ```
 
-Validation highlights:
+Expected result:
 
 ```text
 suite_status: COMPLETED
 evidence_files_checked: 63
 evidence_hashes_verified: true
-pricing_status: PRICING_FRESH
-configuration_count: 8
-complete_cost_configuration_count: 8
-partial_cost_configuration_count: 0
+validated_rule_ids: d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62
+legacy_preliminary_classifications_accepted: M1
 ```
 
-The cost estimates are lab-derived from a 24-hour Windows VM measurement and are
-not production forecasts.
+The human-readable reports in this directory are regenerated from that suite:
+
+```text
+pareto-analysis.md
+tradeoff-explanations.md
+```
+
+The cost estimates remain lab-derived from a 24-hour Windows VM measurement
+and are not production forecasts.

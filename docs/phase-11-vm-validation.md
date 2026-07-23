@@ -10,14 +10,18 @@ portfolio-v0-evidence.zip
 SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
 ```
 
-The archive was produced as a historical portfolio release artifact. It is not
-committed to this source repository; the paths used in the original packaged
-release were:
+The archive was produced as a historical portfolio artifact. It is not
+committed to or currently published by this source repository; the paths used
+in the original package were:
 
 ```text
 evidence/portfolio-v0-evidence.zip
 evidence/portfolio-v0-evidence.sha256.txt
 ```
+
+The checksum above is retained as a provenance record. It does not provide
+independent access to the archive. Raw-evidence revalidation from a fresh clone
+therefore requires a separately supplied copy of `portfolio-v0-evidence.zip`.
 
 ## DetFuzz VM Run
 

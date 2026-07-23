@@ -40,6 +40,25 @@ class CostingTests(unittest.TestCase):
         )
         self.assertAlmostEqual(security["estimated_monthly_cost_usd"], 0.04908321)
 
+    def test_basic_tier_uses_ingestion_meter(self) -> None:
+        bundle = load_catalog_bundle(project_root())
+        costs = estimate_monthly_source_costs(
+            {
+                "volume_profiles": [
+                    {
+                        "source_id": "basic",
+                        "measurement_status": "lab_24h_measurement",
+                        "estimated_gb_per_day": 1.0,
+                        "pricing_log_tier": "Basic Logs",
+                    }
+                ]
+            },
+            bundle.pricing,
+        )
+
+        self.assertEqual(costs["basic"]["unit_price_per_gb_usd"], 0.5)
+        self.assertEqual(costs["basic"]["estimated_monthly_cost_usd"], 15.0)
+
     def test_mixed_configuration_reports_complete_cost(self) -> None:
         bundle = load_catalog_bundle(project_root())
         costs = estimate_monthly_source_costs(bundle.source_volumes, bundle.pricing)
@@ -80,6 +99,25 @@ class CostingTests(unittest.TestCase):
         )
 
         self.assertEqual(summary["cost_status"], "MIXED_ESTIMATE_PROVENANCE")
+
+    def test_zero_cost_measurement_is_preserved_in_partial_summary(self) -> None:
+        summary = summarize_selected_source_costs(
+            ["free", "missing"],
+            {
+                "free": {
+                    "estimated_monthly_cost_usd": 0.0,
+                    "cost_status": "ESTIMATED",
+                },
+                "missing": {
+                    "estimated_monthly_cost_usd": None,
+                },
+            },
+        )
+
+        self.assertEqual(summary["known_monthly_cost_usd"], 0.0)
+        self.assertIsNone(summary["estimated_monthly_cost_usd"])
+        self.assertEqual(summary["cost_status"], "PARTIAL_VOLUME_MEASUREMENT")
+        self.assertEqual(summary["missing_volume_sources"], ["missing"])
 
 
 if __name__ == "__main__":

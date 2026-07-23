@@ -40,7 +40,7 @@ def load_catalog_bundle(root: Path | None = None) -> CatalogBundle:
             base / "measurements" / "source_volumes_lab_sample.yaml"
         ),
         pricing=load_restricted_yaml(
-            base / "pricing" / "microsoft_sentinel_eastus_2026-07-21.yaml"
+            base / "pricing" / "microsoft_sentinel_eastus_2026-07-23.yaml"
         ),
     )
 

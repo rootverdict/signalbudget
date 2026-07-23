@@ -226,7 +226,7 @@ def _validate_evidence_manifest(
         resolved_paths[normalized_path] = file_path
     _require_complete_case_evidence(manifest_paths)
     if cases is not None:
-        _validate_detection_evidence(cases, resolved_paths)
+        _validate_case_evidence(cases, resolved_paths)
     return {
         "evidence_manifest_file_count": len(files),
         "evidence_hashes_verified": checked == len(files),
@@ -244,18 +244,58 @@ def _hash_file(path: Path, chunk_size: int = 1024 * 1024) -> tuple[str, int]:
     return digest.hexdigest(), size
 
 
-def _validate_detection_evidence(
+def _validate_case_evidence(
     cases: list[dict[str, Any]],
     resolved_paths: dict[str, Path],
 ) -> None:
     for case in cases:
         case_id = str(case["case_id"])
-        normalized_path = _normalize_evidence_path(
-            f"{case_id}/detection-result.json"
+        case_record = _load_case_evidence(
+            case_id,
+            "case-record.json",
+            resolved_paths,
         )
-        evidence_path = resolved_paths[normalized_path]
-        evidence = load_json(evidence_path)
-        matched = evidence.get("matched")
+        for field in (
+            "case_id",
+            "classification",
+            "marker_valid",
+            "telemetry_valid",
+            "executable_identity_valid",
+            "detection_matched",
+            "rule_id",
+        ):
+            if field not in case_record:
+                raise ContractValidationError(
+                    f"{case_id} case-record.json missing required field: {field}"
+                )
+            if case_record[field] != case[field]:
+                raise ContractValidationError(
+                    f"{case_id} {field} does not match case-record.json"
+                )
+
+        evidence_flags = (
+            ("marker-validation.json", "marker_valid"),
+            ("telemetry-validation.json", "telemetry_valid"),
+            ("executable-identity.json", "executable_identity_valid"),
+        )
+        for file_name, case_field in evidence_flags:
+            evidence = _load_case_evidence(case_id, file_name, resolved_paths)
+            valid = evidence.get("valid")
+            if not isinstance(valid, bool):
+                raise ContractValidationError(
+                    f"{case_id} {file_name} valid must be boolean"
+                )
+            if valid is not case[case_field]:
+                raise ContractValidationError(
+                    f"{case_id} {case_field} does not match {file_name}"
+                )
+
+        detection = _load_case_evidence(
+            case_id,
+            "detection-result.json",
+            resolved_paths,
+        )
+        matched = detection.get("matched")
         if not isinstance(matched, bool):
             raise ContractValidationError(
                 f"{case_id} detection-result.json matched must be boolean"
@@ -264,10 +304,19 @@ def _validate_detection_evidence(
             raise ContractValidationError(
                 f"{case_id} detection_matched does not match detection-result.json"
             )
-        if evidence.get("rule_id") != EXPECTED_RULE_ID:
+        if detection.get("rule_id") != EXPECTED_RULE_ID:
             raise ContractValidationError(
                 f"{case_id} detection-result.json rule_id must be {EXPECTED_RULE_ID}"
             )
+
+
+def _load_case_evidence(
+    case_id: str,
+    file_name: str,
+    resolved_paths: dict[str, Path],
+) -> dict[str, Any]:
+    normalized_path = _normalize_evidence_path(f"{case_id}/{file_name}")
+    return load_json(resolved_paths[normalized_path])
 
 
 def _require_complete_case_evidence(manifest_paths: set[str]) -> None:

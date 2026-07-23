@@ -100,6 +100,52 @@ class ContractTests(unittest.TestCase):
                     require_suite_contract=True,
                 )
 
+    def test_strict_suite_contract_cross_checks_health_evidence(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_root = Path(directory) / "evidence"
+            shutil.copytree(FIXTURES / "evidence", evidence_root)
+            marker_path = evidence_root / "B0" / "marker-validation.json"
+            marker = json.loads(marker_path.read_text(encoding="utf-8-sig"))
+            marker["valid"] = False
+            marker_path.write_text(json.dumps(marker), encoding="utf-8")
+            _update_manifest_item(payload, "B0/marker-validation.json", marker_path)
+
+            with self.assertRaisesRegex(
+                ContractValidationError,
+                "marker_valid does not match marker-validation.json",
+            ):
+                validate_detfuzz_result(
+                    payload,
+                    evidence_root=evidence_root,
+                    require_suite_contract=True,
+                )
+
+    def test_strict_suite_contract_cross_checks_case_record(self) -> None:
+        payload = json.loads(
+            (FIXTURES / "full-suite-report.json").read_text(encoding="utf-8-sig")
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            evidence_root = Path(directory) / "evidence"
+            shutil.copytree(FIXTURES / "evidence", evidence_root)
+            record_path = evidence_root / "B0" / "case-record.json"
+            record = json.loads(record_path.read_text(encoding="utf-8-sig"))
+            record["classification"] = "VALID_BYPASS"
+            record_path.write_text(json.dumps(record), encoding="utf-8")
+            _update_manifest_item(payload, "B0/case-record.json", record_path)
+
+            with self.assertRaisesRegex(
+                ContractValidationError,
+                "classification does not match case-record.json",
+            ):
+                validate_detfuzz_result(
+                    payload,
+                    evidence_root=evidence_root,
+                    require_suite_contract=True,
+                )
+
     def test_strict_suite_contract_rejects_missing_case_evidence(self) -> None:
         payload_path = FIXTURES / "full-suite-report.json"
         payload = json.loads(payload_path.read_text(encoding="utf-8-sig"))
@@ -196,6 +242,26 @@ class ContractTests(unittest.TestCase):
             result = _validate_evidence_manifest(payload, FIXTURES / "evidence")
 
         self.assertTrue(result["evidence_hashes_verified"])
+
+
+def _update_manifest_item(
+    payload: dict[str, object],
+    relative_path: str,
+    evidence_path: Path,
+) -> None:
+    manifest = payload["evidence_manifest"]
+    assert isinstance(manifest, dict)
+    files = manifest["files"]
+    assert isinstance(files, list)
+    manifest_item = next(
+        item
+        for item in files
+        if isinstance(item, dict)
+        and str(item["path"]).replace("\\", "/").lower() == relative_path.lower()
+    )
+    data = evidence_path.read_bytes()
+    manifest_item["sha256"] = hashlib.sha256(data).hexdigest()
+    manifest_item["size_bytes"] = len(data)
 
 
 if __name__ == "__main__":

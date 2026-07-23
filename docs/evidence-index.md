@@ -25,7 +25,7 @@ compatibility checks and is not part of the installed SignalBudget package.
 
 ## Pricing Evidence
 
-`pricing/microsoft_sentinel_eastus_2026-07-21.yaml`
+`pricing/microsoft_sentinel_eastus_2026-07-23.yaml`
 
 Versioned Microsoft Sentinel pricing data with:
 
@@ -111,13 +111,18 @@ Final Phase 9 and Phase 10 reports are backed by the real DetFuzz Windows VM
 suite `dc017824-0d4e-41d0-9d32-610b410accb0`, not by the strict test fixture.
 See `docs/phase-11-vm-validation.md` for the final evidence package details.
 
-The historical external release archive is not committed to this source
-repository. Its recorded release name and checksum are:
+The historical archive is not committed to or currently published by this
+source repository. Its recorded name and checksum are:
 
 ```text
 portfolio-v0-evidence.zip
 SHA256 7c58fd3ee092abf19841f6ea738f4674d6f138e81e779731283077b3d577dd85
 ```
+
+This checksum preserves provenance but does not make the archive independently
+retrievable. A fresh clone can verify the checked-in Phase 9/10 report hashes
+and run the synthetic strict-contract fixture; revalidating the historical raw
+VM suite requires a separately supplied copy of the archive.
 
 The archive contains clock preflight, the failed first calibration, the passing
 calibration retry, eight matched Sysmon XML events, the canonical DetFuzz suite

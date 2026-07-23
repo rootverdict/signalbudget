@@ -77,7 +77,7 @@ def summarize_selected_source_costs(
         known_cost += float(estimate["estimated_monthly_cost_usd"])
         statuses.add(str(estimate.get("cost_status", "ESTIMATED")))
 
-    if missing and known_cost == 0:
+    if missing and not statuses:
         return {
             "known_monthly_cost_usd": None,
             "estimated_monthly_cost_usd": None,

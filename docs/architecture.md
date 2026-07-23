@@ -41,7 +41,7 @@ present.
 
 Stores 24-hour lab VM volume and byte-size measurements used for cost estimates.
 
-`pricing/microsoft_sentinel_eastus_2026-07-21.yaml`
+`pricing/microsoft_sentinel_eastus_2026-07-23.yaml`
 
 Stores Microsoft Sentinel pricing and freshness metadata.
 

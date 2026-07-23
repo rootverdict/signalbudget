@@ -57,6 +57,8 @@ valid markers, telemetry, and executable identity for every case
 an evidence manifest with every required per-case artifact
 all manifest paths contained by the evidence root
 matching file sizes and SHA-256 hashes
+case summaries matching case-record, marker, telemetry, executable-identity,
+and detection-result evidence
 ```
 
 This two-level contract allows partial and benign DetFuzz reports to be

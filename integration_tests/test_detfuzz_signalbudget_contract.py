@@ -34,7 +34,12 @@ class DetFuzzSignalBudgetIntegrationTests(unittest.TestCase):
                         "rule_slug": EXPECTED_RULE_SLUG,
                     }
                 )
-                _write_case_evidence(evidence_root / case_id, case_id, matched)
+                _write_case_evidence(
+                    evidence_root / case_id,
+                    case_id,
+                    classification,
+                    matched,
+                )
 
             suite_results_path = workspace / "suite-results.json"
             suite_results_path.write_text(
@@ -70,10 +75,23 @@ class DetFuzzSignalBudgetIntegrationTests(unittest.TestCase):
             self.assertEqual(summary["validated_rule_ids"], [EXPECTED_RULE_ID])
 
 
-def _write_case_evidence(case_dir: Path, case_id: str, detection_matched: bool) -> None:
+def _write_case_evidence(
+    case_dir: Path,
+    case_id: str,
+    classification: str,
+    detection_matched: bool,
+) -> None:
     case_dir.mkdir()
     files = {
-        "case-record.json": {"case_id": case_id},
+        "case-record.json": {
+            "case_id": case_id,
+            "classification": classification,
+            "marker_valid": True,
+            "telemetry_valid": True,
+            "executable_identity_valid": True,
+            "detection_matched": detection_matched,
+            "rule_id": EXPECTED_RULE_ID,
+        },
         "execution.json": {"case_id": case_id, "exit_code": 0},
         "marker-validation.json": {"valid": True},
         "telemetry-validation.json": {"valid": True},

@@ -7,7 +7,7 @@ evidence/pareto-analysis.md
 evidence/tradeoff-explanations.md
 ```
 
-The historical raw VM archive is an external release artifact, not a file in
+The historical raw VM archive is not committed to or currently published by
 this repository. Its recorded name and checksum are:
 
 ```text
@@ -21,6 +21,11 @@ the real DetFuzz VM suite:
 ```text
 dc017824-0d4e-41d0-9d32-610b410accb0
 ```
+
+The checksum is a provenance record, not a download mechanism. Without a copy
+of the archive, a fresh clone can verify the checked-in report hashes and the
+synthetic strict-contract fixture, but cannot independently rerun verification
+of the historical raw VM evidence.
 
 The external evidence archive contains:
 

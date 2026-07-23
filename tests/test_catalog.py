@@ -14,7 +14,7 @@ PACKAGED_DATA_FILES = (
     "contracts/detfuzz_result_schema.json",
     "measurements/detfuzz_lab_measurements.yaml",
     "measurements/source_volumes_lab_sample.yaml",
-    "pricing/microsoft_sentinel_eastus_2026-07-21.yaml",
+    "pricing/microsoft_sentinel_eastus_2026-07-23.yaml",
 )
 
 
@@ -27,7 +27,23 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(bundle.detection_dependencies["detections"]), 3)
         self.assertEqual(len(bundle.investigation_questions["questions"]), 5)
         self.assertEqual(bundle.pricing["vendor"], "Microsoft")
+        self.assertEqual(bundle.pricing["retrieved_at"], "2026-07-23T00:00:00Z")
         self.assertEqual(bundle.pricing["meters"][0]["retail_price"], 4.3)
+        self.assertEqual(
+            bundle.pricing["meters"][1]["meter_name"],
+            "Basic Logs Data Ingestion",
+        )
+        self.assertEqual(bundle.pricing["meters"][1]["unit_price"], 0.5)
+        self.assertEqual(
+            bundle.pricing["meters"][2]["meter_name"],
+            "Auxiliary Logs Data Ingestion",
+        )
+        self.assertTrue(
+            all(
+                meter["billing_basis"] == "ingested_gb"
+                for meter in bundle.pricing["meters"]
+            )
+        )
 
     def test_default_loader_uses_packaged_data(self) -> None:
         bundle = load_catalog_bundle()

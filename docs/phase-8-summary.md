@@ -30,13 +30,17 @@ real evidence so far.
 ## Pricing Source
 
 Pricing was retrieved from Microsoft's official Azure Retail Prices API on
-2026-07-21.
+2026-07-21 and the ingestion-meter classifications were reverified on
+2026-07-23.
 
 ```text
 Microsoft Sentinel East US Pay-as-you-go Analysis: 4.30 USD / GB
-Microsoft Sentinel East US Basic Logs Analysis: 1.00 USD / GB
-Microsoft Sentinel East US Classic Auxiliary Logs Analysis: 0.05 USD / GB
+Azure Monitor East US Basic Logs Data Ingestion: 0.50 USD / GB
+Azure Monitor East US Auxiliary Logs Data Ingestion: 0.05 USD / GB
 ```
+
+Basic and Auxiliary query-analysis meters are separate usage dimensions and
+are not used as ingestion prices.
 
 Actual pricing may vary by agreement, currency, taxes, and purchase date.
 

@@ -1,0 +1,44 @@
+schema_version: "1.0"
+vendor: "Microsoft"
+product: "Microsoft Sentinel"
+region: "eastus"
+currency: "USD"
+retrieved_at: "2026-07-23T00:00:00Z"
+max_age_days: 90
+source_url: "https://prices.azure.com/api/retail/prices?api-version=2023-01-01-preview"
+verified_at: "2026-07-23T00:00:00Z"
+source_note: "Official Azure Retail Prices API. Analytics uses the Microsoft Sentinel simplified-plan ingestion-and-analysis meter; Basic and Auxiliary use Azure Monitor data-ingestion meters. USD retail prices may vary by agreement, currency, taxes, and purchase date."
+meters:
+  - meter_name: "Pay-as-you-go Analysis"
+    sku_name: "Pay-as-you-go"
+    log_tier: "Analytics Logs"
+    service_name: "Sentinel"
+    charge_category: "ingestion_and_analysis"
+    billing_basis: "ingested_gb"
+    retail_price: 4.3
+    unit_price: 4.3
+    unit_of_measure: "1 GB"
+    effective_date: "2023-07-01T00:00:00Z"
+    meter_id: "05d96412-9ca4-5926-b2a0-c646f72b2c2c"
+  - meter_name: "Basic Logs Data Ingestion"
+    sku_name: "Basic Logs"
+    log_tier: "Basic Logs"
+    service_name: "Azure Monitor"
+    charge_category: "ingestion"
+    billing_basis: "ingested_gb"
+    retail_price: 0.5
+    unit_price: 0.5
+    unit_of_measure: "1 GB"
+    effective_date: "2022-10-01T00:00:00Z"
+    meter_id: "e1e87d95-70e9-5f7b-b29d-f879cbdc3dc0"
+  - meter_name: "Auxiliary Logs Data Ingestion"
+    sku_name: "Auxiliary Logs"
+    log_tier: "Auxiliary Logs"
+    service_name: "Azure Monitor"
+    charge_category: "ingestion"
+    billing_basis: "ingested_gb"
+    retail_price: 0.05
+    unit_price: 0.05
+    unit_of_measure: "1 GB"
+    effective_date: "2025-08-01T00:00:00Z"
+    meter_id: "2039bc14-6184-5636-9b42-0bf2500c9745"

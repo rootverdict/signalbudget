@@ -72,10 +72,11 @@ OK
 - `artifacts/phase-10/tradeoff-explanations.md`
 - `evidence/README.md`
 
-The historical VM evidence archive is a release artifact and is not committed
-to this source repository. Its provenance and checksum are recorded in
-`docs/phase-11-vm-validation.md`; the generated SignalBudget reports remain
-checked in under `artifacts/`.
+The historical VM evidence archive is not committed or currently published by
+this source repository. Its recorded provenance and checksum are retained in
+`docs/phase-11-vm-validation.md`, but raw-evidence revalidation requires access
+to that archive. The generated SignalBudget reports remain checked in under
+`artifacts/` and their recorded hashes can be verified locally.
 
 Current result:
 

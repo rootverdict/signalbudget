@@ -6,3 +6,9 @@ build/
 .ruff_cache/
 .mypy_cache/
 dist/
+
+# Evidence archives are committed as .zip + .sha256.txt; extractions are not.
+evidence/detfuzz-signalbudget-results-*/
+
+# Private working notes.
+PROJECT-NOTES.md

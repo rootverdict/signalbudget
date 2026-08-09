@@ -46,3 +46,51 @@ jobs:
 
       - name: Run exported-evidence contract test
         run: python -m unittest discover -s integration_tests -v
+
+      - name: Verify evidence archive checksum
+        working-directory: evidence
+        run: sha256sum -c ./*.sha256.txt
+
+      - name: Regenerate reports from the committed VM evidence
+        env:
+          SUITE_ID: 4ddc2989-4c84-49fe-801e-996c67a5702f
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          unzip -q evidence/*-posix.zip -d build/ci-evidence
+          run="build/ci-evidence/${SUITE_ID}"
+          signalbudget validate-detfuzz \
+            --path "${run}/reports/suite-report.json" \
+            --evidence-root "${run}/evidence" \
+            --require-suite-contract > /dev/null
+          signalbudget pareto-analysis \
+            --output-dir build/ci-reports/phase-9 \
+            --detfuzz-result "${run}/reports/suite-report.json" \
+            --detfuzz-evidence-root "${run}/evidence" > /dev/null
+          signalbudget explain-tradeoffs \
+            --output-dir build/ci-reports/phase-10 \
+            --detfuzz-result "${run}/reports/suite-report.json" \
+            --detfuzz-evidence-root "${run}/evidence" > /dev/null
+          # Pricing status is a function of the profile age at run time, so it is
+          # the one line that legitimately drifts from the committed snapshot.
+          diff -I '^Pricing status:' \
+            build/ci-reports/phase-9/pareto-analysis.md \
+            artifacts/phase-9/pareto-analysis.md
+          diff -I '^Pricing status:' \
+            build/ci-reports/phase-10/tradeoff-explanations.md \
+            artifacts/phase-10/tradeoff-explanations.md
+
+      - name: Reject tampered evidence
+        env:
+          SUITE_ID: 4ddc2989-4c84-49fe-801e-996c67a5702f
+        run: |
+          set -euo pipefail
+          run="build/ci-evidence/${SUITE_ID}"
+          printf ' ' >> "${run}/evidence/B0/case-record.json"
+          if signalbudget validate-detfuzz \
+            --path "${run}/reports/suite-report.json" \
+            --evidence-root "${run}/evidence" \
+            --require-suite-contract > /dev/null 2>&1; then
+            echo "expected tampered evidence to be rejected" >&2
+            exit 1
+          fi

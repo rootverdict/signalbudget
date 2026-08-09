@@ -40,7 +40,39 @@ For the live handoff demo, use DetFuzz's canonical report artifact:
 python -m signalbudget.cli validate-detfuzz --path C:\DetFuzz\runs\<suite-id>\reports\suite-report.json --evidence-root C:\DetFuzz\runs\<suite-id>\evidence --require-suite-contract
 ```
 
-## 3. Show The Catalog
+## 3. Prove The Evidence Gate Is Real
+
+This is the shortest convincing moment in the demo. Corrupt one byte of evidence
+and re-run the same validation that just succeeded:
+
+```powershell
+Add-Content -Path "$run\evidence\B0\case-record.json" -Value ' '
+python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
+```
+
+Expected:
+
+```text
+signalbudget: error: evidence hash mismatch for B0/case-record.json
+```
+
+The command exits `2`. Re-extract the archive to restore the run directory.
+
+Make three points while it is on screen:
+
+```text
+Validated coverage requires verified evidence, so pareto-analysis refuses to
+run without --detfuzz-result at all.
+
+--evidence-root is mandatory. The root recorded inside the manifest is treated
+as untrusted input and never followed, so a hostile artifact cannot redirect
+the validator outside the directory the caller named.
+
+Deleted, truncated, duplicated, absolute, and traversal paths are rejected by
+the same check that catches this hash mismatch.
+```
+
+## 4. Show The Catalog
 
 Open:
 
@@ -58,7 +90,7 @@ PowerShell Script Block
 Windows Security Logon
 ```
 
-## 4. Run The Tests
+## 5. Run The Tests
 
 ```powershell
 $env:PYTHONPATH='src'
@@ -77,7 +109,7 @@ Point out the boundary test:
 tests/test_no_detfuzz_imports.py
 ```
 
-## 5. Generate The Pareto Analysis
+## 6. Generate The Pareto Analysis
 
 ```powershell
 python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
@@ -98,7 +130,7 @@ Key result:
 windows_security_logon is dominated
 ```
 
-## 6. Explain The Dominated Source
+## 7. Explain The Dominated Source
 
 Say:
 
@@ -114,7 +146,7 @@ Then immediately qualify it:
 This is a lab-volume finding, not a general production claim.
 ```
 
-## 7. Generate Tradeoff Explanations
+## 8. Generate Tradeoff Explanations
 
 ```powershell
 python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
@@ -129,13 +161,18 @@ artifacts/phase-10/tradeoff-explanations.md
 Show:
 
 ```text
-pricing_status: PRICING_FRESH
+pricing_status: PRICING_FRESH or PRICING_STALE, computed from profile age
 remove sysmon_process_create -> lose DetFuzz validated detection
 baseline: none
 frontier transitions in non-decreasing cost order
 ```
 
-## 8. Close With The Honest Boundary
+If the demo runs more than 90 days after the pricing profile was retrieved, the
+report reads `PRICING_STALE`. That is the intended behaviour, and it is a good
+point to make out loud: the tool labels the age of its own inputs instead of
+presenting an old price as current.
+
+## 9. Close With The Honest Boundary
 
 End with:
 

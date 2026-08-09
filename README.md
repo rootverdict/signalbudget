@@ -29,6 +29,9 @@ DetFuzz-validated. SignalBudget does not import `detfuzz.*` code.
   - higher validated detection coverage,
   - higher investigation-question coverage.
 - Explains what detections and questions are lost when each source is removed.
+- Refuses to count a detection as validated unless hash-verified DetFuzz
+  evidence proves it fired. `pareto-analysis` and `explain-tradeoffs` will not
+  run at all without a verified suite artifact.
 
 ## Quick Check
 
@@ -51,6 +54,21 @@ $run = 'build\v1-evidence\4ddc2989-4c84-49fe-801e-996c67a5702f'
 python -m signalbudget.cli validate-detfuzz --path "$run\reports\suite-report.json" --evidence-root "$run\evidence" --require-suite-contract
 python -m signalbudget.cli pareto-analysis --output-dir artifacts\phase-9 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
 python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --detfuzz-result "$run\reports\suite-report.json" --detfuzz-evidence-root "$run\evidence"
+```
+
+The same sequence on macOS or Linux:
+
+```bash
+export PYTHONPATH=src
+python -m unittest discover -s tests
+python -m signalbudget.cli summarize
+
+mkdir -p build/v1-evidence
+unzip -q evidence/detfuzz-signalbudget-results-20260723-212216-posix.zip -d build/v1-evidence
+run=build/v1-evidence/4ddc2989-4c84-49fe-801e-996c67a5702f
+python -m signalbudget.cli validate-detfuzz --path "$run/reports/suite-report.json" --evidence-root "$run/evidence" --require-suite-contract
+python -m signalbudget.cli pareto-analysis --output-dir artifacts/phase-9 --detfuzz-result "$run/reports/suite-report.json" --detfuzz-evidence-root "$run/evidence"
+python -m signalbudget.cli explain-tradeoffs --output-dir artifacts/phase-10 --detfuzz-result "$run/reports/suite-report.json" --detfuzz-evidence-root "$run/evidence"
 ```
 
 Run the standalone exported-evidence contract test:
@@ -81,12 +99,21 @@ regenerate the SignalBudget reports locally.
 Current result:
 
 ```text
-pricing_status: PRICING_FRESH
 configuration_count: 8
 complete_cost_configuration_count: 8
 partial_cost_configuration_count: 0
+non_dominated: 7
 dominated: windows_security_logon
 ```
+
+`pricing_status` is deliberately not pinned here. It is computed at run time from
+`retrieved_at` and `max_age_days` in the pricing profile, so a profile retrieved
+on 2026-07-23 with a 90-day budget reports `PRICING_FRESH` until roughly
+2026-10-21 and `PRICING_STALE` afterwards. A stale profile still produces a full
+analysis; the reports simply carry the `PRICING_STALE` label so the estimate is
+never mistaken for current pricing. Pass `--fail-on-stale-pricing` to
+`pareto-analysis` or `explain-tradeoffs` to turn that label into a hard failure
+instead.
 
 `windows_security_logon` is dominated by `powershell_script_block` in this lab
 measurement because both provide one investigation question and zero
@@ -95,6 +122,31 @@ observed 24-hour VM window.
 
 This is a narrow lab finding, not a production-wide claim. Production logon
 volume can change that tradeoff.
+
+## Reading The Cost Numbers
+
+Volumes were measured on a single Windows VM, so every cost in this repository
+is **per endpoint per month**. The frontier spans roughly $0.003 to $0.30 in
+those units. Fleet cost is that figure multiplied by endpoint count:
+
+```text
+full three-source collection   $0.30219411 x 5,000 endpoints x 12 = ~$18,000/year
+powershell script block only   $0.00318630 x 5,000 endpoints x 12 = ~$191/year
+```
+
+Those illustrative totals are arithmetic on lab measurements, not a production
+forecast. Two limits apply to every figure:
+
+- Sizing uses exported event XML as a proxy for billable ingestion volume, and
+  is labeled `XML_EXPORT_SIZE_PROXY` throughout. Real ingestion size differs.
+- The 24-hour measurement window included DetFuzz test execution, so it is not
+  a clean idle baseline. The measurement file records this.
+
+The two ratios the frontier supports as telemetry KPIs are **validated
+detections per dollar per month** and **investigation questions answerable per
+dollar per month**. Both fall directly out of the per-configuration counts and
+costs in `artifacts/phase-9/pareto-analysis.json`, and both are what the
+source-removal report in `artifacts/phase-10` prices when a source is dropped.
 
 ## Evidence Boundary
 
@@ -115,6 +167,28 @@ SignalBudget never follows the absolute root embedded in an imported manifest,
 and rejects absolute, traversal, duplicate, missing, incorrectly sized, or
 hash-mismatched evidence entries.
 
+## Design Notes
+
+**Zero runtime dependencies.** The installed package imports nothing outside the
+Python standard library; `mypy` and `ruff` are development extras only. The
+catalogs use a small, fixed YAML subset, so `loaders.load_restricted_yaml`
+parses exactly that subset and raises on anything else rather than pulling in a
+general-purpose YAML parser. Nothing to audit, patch, or pin at runtime.
+
+**BOM tolerance is deliberate.** DetFuzz artifacts are PowerShell-generated and
+carry a UTF-8 BOM, so every artifact read uses `utf-8-sig`. Test fixtures keep
+their BOMs on purpose to hold that behaviour under test, and
+`tests/fixtures/evidence/**` is pinned to CRLF in `.gitattributes` because those
+bytes are covered by recorded SHA-256 hashes.
+
+**Exit codes.** Every command returns `0` on success and `2` on failure.
+Contract violations, malformed artifacts, missing files, and stale-pricing
+rejections print a single-line message to stderr instead of a traceback:
+
+```text
+signalbudget: error: evidence hash mismatch for B0/case-record.json
+```
+
 ## Release Verification
 
 ```powershell
@@ -129,6 +203,16 @@ python -m signalbudget.cli summarize
 Catalog, measurement, pricing, and contract files are included in the Python
 package, so the installed CLI does not depend on the repository checkout.
 
+Continuous integration builds a wheel, installs it, and runs the CLI from
+outside the repository to prove that. It then verifies the evidence archive
+checksum, regenerates both reports from the committed evidence, and diffs them
+against `artifacts/` so the published numbers cannot drift from the evidence
+that produced them. A final step corrupts an evidence file and asserts that
+validation rejects it.
+
+Extracting the evidence archive anywhere under `evidence/` is ignored by git;
+only the `.zip` and its `.sha256.txt` are tracked.
+
 ## Documentation
 
 - `docs/v1-scope.md`
@@ -142,12 +226,17 @@ package, so the installed CLI does not depend on the repository checkout.
 - `docs/phase-10-summary.md`
 - `docs/phase-11-summary.md`
 
-## Final Status
+## Status
 
-```text
-SignalBudget Phase 8: catalog, contract, pricing
-SignalBudget Phase 9: complete Pareto analysis
-SignalBudget Phase 10: freshness and loss explanations
-SignalBudget Phase 11: documentation and demo package
-SignalBudget v1: locally complete
-```
+SignalBudget v1 is complete and reproducible from a fresh clone. The committed
+evidence archive revalidates against its checksum, all 63 evidence files pass
+hash verification, and both reports regenerate from that evidence — CI diffs the
+regenerated Markdown against the committed copies on every push, and separately
+asserts that corrupted evidence is rejected.
+
+Scope is deliberately narrow: three Windows log sources, one DetFuzz-validated
+detection, and costs derived from a 24-hour lab VM window. What that supports and
+what it does not is set out in `docs/limitations-and-future-work.md`.
+
+Phase numbering in `docs/` continues DetFuzz's sequence; SignalBudget's own work
+begins at phase 8.

@@ -34,7 +34,7 @@ OK
 suite_status: COMPLETED
 evidence_files_checked: 63
 evidence_hashes_verified: true
-pricing_status: PRICING_FRESH
+pricing_status: PRICING_FRESH or PRICING_STALE, computed from profile age
 configuration_count: 8
 complete_cost_configuration_count: 8
 partial_cost_configuration_count: 0

@@ -84,7 +84,7 @@ Human-readable Pareto report.
 configuration_count: 8
 complete_cost_configuration_count: 8
 partial_cost_configuration_count: 0
-pricing_status: PRICING_FRESH
+pricing_status: computed at run time from the pricing profile age
 dominated: windows_security_logon
 ```
 

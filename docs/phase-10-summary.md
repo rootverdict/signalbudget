@@ -25,11 +25,15 @@ python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --d
 
 ## Current Result
 
-Pricing is fresh:
+Pricing freshness is evaluated at run time, not pinned in this document. The
+stored profile was retrieved on 2026-07-23 with a 90-day budget, so it reports:
 
 ```text
-PRICING_FRESH
+PRICING_FRESH   until roughly 2026-10-21
+PRICING_STALE   afterwards
 ```
+
+Either way the analysis still runs; only the label changes.
 
 Removing `sysmon_process_create` loses the DetFuzz-validated encoded
 PowerShell detection plus process command-line and parent-child investigation

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from signalbudget.configurations import enumerate_source_configurations
@@ -12,6 +13,13 @@ from signalbudget.freshness import pricing_freshness
 from signalbudget.loaders import load_catalog_bundle
 from signalbudget.pareto import analyze_pareto, render_pareto_markdown
 from signalbudget.tradeoffs import build_tradeoff_report, render_tradeoff_markdown
+
+EXIT_OK = 0
+EXIT_ERROR = 2
+
+
+class CliError(RuntimeError):
+    """A user-facing failure reported as a message instead of a traceback."""
 
 
 def summarize(args: argparse.Namespace) -> None:
@@ -111,8 +119,7 @@ def pareto(args: argparse.Namespace) -> None:
     )
     analysis = analyze_pareto(configurations_payload)
     freshness = pricing_freshness(bundle.pricing)
-    if args.fail_on_stale_pricing and not freshness["fresh"]:
-        raise SystemExit(f"pricing is not fresh: {freshness['status']}")
+    _enforce_pricing_freshness(args, freshness)
     analysis["pricing_status"] = freshness["status"]
     analysis["pricing"] = freshness
     analysis["detfuzz_contract"] = detfuzz_summary
@@ -139,6 +146,7 @@ def explain_tradeoffs(args: argparse.Namespace) -> None:
         evidence_root=args.detfuzz_evidence_root,
         require_suite_contract=True,
     )
+    _enforce_pricing_freshness(args, pricing_freshness(bundle.pricing))
     report = build_tradeoff_report(bundle, set(detfuzz_summary["validated_rule_ids"]))
     report["detfuzz_contract"] = detfuzz_summary
     if args.output_dir is not None:
@@ -155,6 +163,19 @@ def explain_tradeoffs(args: argparse.Namespace) -> None:
             "markdown_report": str(markdown_path),
         }
     print(json.dumps(report, indent=2, sort_keys=True))
+
+
+def _enforce_pricing_freshness(
+    args: argparse.Namespace,
+    freshness: dict[str, object],
+) -> None:
+    if getattr(args, "fail_on_stale_pricing", False) and not freshness["fresh"]:
+        raise CliError(
+            f"pricing is not fresh: {freshness['status']} "
+            f"({freshness['age_days']} days old, maximum "
+            f"{freshness['max_age_days']}). Refresh the pricing profile or drop "
+            f"--fail-on-stale-pricing to continue with a labeled stale estimate."
+        )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -254,36 +275,39 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verified DetFuzz suite report JSON used for validated coverage.",
     )
     tradeoffs.add_argument("--detfuzz-evidence-root", type=Path, default=None)
+    tradeoffs.add_argument("--fail-on-stale-pricing", action="store_true")
 
     return parser
 
 
-def main() -> None:
+COMMANDS = {
+    "summarize": summarize,
+    "validate-detfuzz": validate_detfuzz,
+    "enumerate-configurations": configurations,
+    "pareto-analysis": pareto,
+    "explain-tradeoffs": explain_tradeoffs,
+}
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    command = args.command if args.command is not None else "summarize"
 
-    if args.command in {None, "summarize"}:
-        summarize(args)
-        return
+    handler = COMMANDS.get(command)
+    if handler is None:
+        parser.error(f"unsupported command: {command}")
 
-    if args.command == "validate-detfuzz":
-        validate_detfuzz(args)
-        return
-
-    if args.command == "enumerate-configurations":
-        configurations(args)
-        return
-
-    if args.command == "pareto-analysis":
-        pareto(args)
-        return
-
-    if args.command == "explain-tradeoffs":
-        explain_tradeoffs(args)
-        return
-
-    parser.error(f"unsupported command: {args.command}")
+    try:
+        handler(args)
+    except (CliError, ValueError, OSError) as error:
+        # ContractValidationError and json.JSONDecodeError both subclass
+        # ValueError, so contract, catalog, and file failures all report as a
+        # single-line message rather than a traceback.
+        print(f"signalbudget: error: {error}", file=sys.stderr)
+        return EXIT_ERROR
+    return EXIT_OK
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

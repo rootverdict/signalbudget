@@ -3,12 +3,28 @@ import copy
 import io
 import json
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from signalbudget.cli import configurations, main
+from signalbudget.cli import (
+    EXIT_ERROR,
+    EXIT_OK,
+    CliError,
+    _enforce_pricing_freshness,
+    build_parser,
+    configurations,
+    main,
+)
 from signalbudget.loaders import CatalogBundle, load_catalog_bundle, project_root
+
+STALE_PRICING = {
+    "fresh": False,
+    "status": "PRICING_STALE",
+    "age_days": 120,
+    "max_age_days": 90,
+}
 
 
 class CliTests(unittest.TestCase):
@@ -96,6 +112,72 @@ class CliTests(unittest.TestCase):
             1,
         )
         self.assertEqual(payload["detfuzz_contract"], detfuzz_summary)
+
+    def test_successful_command_returns_success_exit_code(self) -> None:
+        with patch("sys.argv", ["signalbudget", "summarize"]):
+            with redirect_stdout(io.StringIO()):
+                exit_code = main()
+
+        self.assertEqual(exit_code, EXIT_OK)
+
+    def test_contract_failure_reports_message_without_traceback(self) -> None:
+        stderr = io.StringIO()
+
+        with patch(
+            "sys.argv",
+            ["signalbudget", "validate-detfuzz", "--path", "does-not-exist.json"],
+        ):
+            with redirect_stderr(stderr):
+                exit_code = main()
+
+        self.assertEqual(exit_code, EXIT_ERROR)
+        self.assertIn("signalbudget: error:", stderr.getvalue())
+        self.assertNotIn("Traceback", stderr.getvalue())
+
+    def test_malformed_artifact_reports_message_without_traceback(self) -> None:
+        stderr = io.StringIO()
+
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "malformed.json"
+            path.write_text("{not json", encoding="utf-8")
+
+            with patch(
+                "sys.argv",
+                ["signalbudget", "validate-detfuzz", "--path", str(path)],
+            ):
+                with redirect_stderr(stderr):
+                    exit_code = main()
+
+        self.assertEqual(exit_code, EXIT_ERROR)
+        self.assertIn("signalbudget: error:", stderr.getvalue())
+        self.assertNotIn("Traceback", stderr.getvalue())
+
+    def test_stale_pricing_fails_when_explicitly_requested(self) -> None:
+        args = argparse.Namespace(fail_on_stale_pricing=True)
+
+        with self.assertRaises(CliError) as raised:
+            _enforce_pricing_freshness(args, dict(STALE_PRICING))
+
+        self.assertIn("PRICING_STALE", str(raised.exception))
+
+    def test_stale_pricing_is_labeled_but_allowed_by_default(self) -> None:
+        args = argparse.Namespace(fail_on_stale_pricing=False)
+
+        _enforce_pricing_freshness(args, dict(STALE_PRICING))
+
+    def test_explain_tradeoffs_accepts_fail_on_stale_pricing(self) -> None:
+        parser = build_parser()
+
+        args = parser.parse_args(
+            [
+                "explain-tradeoffs",
+                "--detfuzz-result",
+                "suite-report.json",
+                "--fail-on-stale-pricing",
+            ]
+        )
+
+        self.assertTrue(args.fail_on_stale_pricing)
 
 
 if __name__ == "__main__":

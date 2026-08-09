@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 
 from signalbudget.loaders import load_catalog_bundle, project_root
 from signalbudget.tradeoffs import (

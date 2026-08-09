@@ -1,4 +1,4 @@
-﻿# Limitations And Future Work
+# Limitations And Future Work
 
 ## Current Limitations
 

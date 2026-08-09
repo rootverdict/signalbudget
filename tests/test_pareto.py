@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 
 from signalbudget.configurations import enumerate_source_configurations
 from signalbudget.costing import estimate_monthly_source_costs

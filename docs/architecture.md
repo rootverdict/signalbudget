@@ -1,4 +1,4 @@
-﻿# Architecture
+# Architecture
 
 SignalBudget is intentionally data-coupled to DetFuzz, not code-coupled.
 

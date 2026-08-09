@@ -1,4 +1,4 @@
-﻿schema_version: "1.0"
+schema_version: "1.0"
 detections:
   - id: d4f8c4e4-984d-4f5f-9f6c-1cc6b37f2f62
     slug: "detfuzz-v0-powershell-encoded-command"

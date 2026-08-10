@@ -1,6 +1,6 @@
 """SignalBudget v1 package."""
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 from signalbudget.configurations import enumerate_source_configurations
 from signalbudget.contracts import validate_detfuzz_result

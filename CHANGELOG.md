@@ -2,6 +2,33 @@
 
 Notable changes per release. Dates are ISO-8601.
 
+## 1.2.0 — 2026-08-10
+
+### Changed
+
+- Pricing freshness is now measured from the later of `retrieved_at` and
+  `verified_at` rather than from `retrieved_at` alone. Re-querying the source
+  API and finding the meters unchanged is current evidence that the stored
+  prices still hold, so a profile carrying such a check is not stale merely
+  because the original download was long ago. `verified_at` remains optional and
+  the behaviour is unchanged without it. Re-verification defers staleness by
+  `max_age_days` from the verification date; it does not make a profile
+  permanently fresh.
+- `pricing_freshness` output gained `verified_at` and `freshness_basis`, and the
+  Markdown reports print the verification date under the status line.
+
+### Data
+
+- All three stored meters re-queried from the Azure Retail Prices API on
+  2026-08-10 and confirmed unchanged — Analytics $4.30/GB, Basic $0.50/GB,
+  Auxiliary $0.05/GB, matching on price, unit, effective date, and meter naming.
+  `verified_at` moved to 2026-08-10, which shifts the stale date from
+  2026-10-21 to roughly 2026-11-08. No price value changed.
+- `docs/pricing-assumptions.md` gained a verification log and an inventory of
+  the 21 eastus Sentinel meters the profile deliberately does not model, most
+  significantly the commitment tiers — which are why the stored pay-as-you-go
+  rate is an upper bound on ingestion cost at fleet scale.
+
 ## 1.1.0 — 2026-08-10
 
 Everything below landed on `main` after the `v1.0.0` tag was cut, so the tagged

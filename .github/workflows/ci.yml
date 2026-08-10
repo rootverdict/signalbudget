@@ -73,12 +73,20 @@ jobs:
             --detfuzz-evidence-root "${run}/evidence" > /dev/null
           # Pricing status is a function of the profile age at run time, so it is
           # the one line that legitimately drifts from the committed snapshot.
+          # evidence/ carries copies of both reports for the evidence index, so
+          # they are checked against the same regenerated output.
           diff -I '^Pricing status:' \
             build/ci-reports/phase-9/pareto-analysis.md \
             artifacts/phase-9/pareto-analysis.md
           diff -I '^Pricing status:' \
             build/ci-reports/phase-10/tradeoff-explanations.md \
             artifacts/phase-10/tradeoff-explanations.md
+          diff -I '^Pricing status:' \
+            build/ci-reports/phase-9/pareto-analysis.md \
+            evidence/pareto-analysis.md
+          diff -I '^Pricing status:' \
+            build/ci-reports/phase-10/tradeoff-explanations.md \
+            evidence/tradeoff-explanations.md
 
       - name: Reject tampered evidence
         env:

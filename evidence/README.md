@@ -64,5 +64,10 @@ pareto-analysis.md
 tradeoff-explanations.md
 ```
 
+They are byte-identical to the copies under `artifacts/`, and CI diffs both
+locations against freshly regenerated output on every push, so neither copy can
+drift from the evidence. The `Pricing status:` line is excluded from that diff
+because it is evaluated at run time.
+
 The cost estimates remain lab-derived from a 24-hour Windows VM measurement
 and are not production forecasts.

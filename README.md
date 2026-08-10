@@ -212,9 +212,10 @@ package, so the installed CLI does not depend on the repository checkout.
 Continuous integration builds a wheel, installs it, and runs the CLI from
 outside the repository to prove that. It then verifies the evidence archive
 checksum, regenerates both reports from the committed evidence, and diffs them
-against `artifacts/` so the published numbers cannot drift from the evidence
-that produced them. A final step corrupts an evidence file and asserts that
-validation rejects it.
+against every committed copy — `artifacts/` and the duplicates the evidence
+index keeps in `evidence/` — so the published numbers cannot drift from the
+evidence that produced them. A final step corrupts an evidence file and asserts
+that validation rejects it.
 
 Extracting the evidence archive anywhere under `evidence/` is ignored by git;
 only the `.zip` and its `.sha256.txt` are tracked.

@@ -222,6 +222,7 @@ only the `.zip` and its `.sha256.txt` are tracked.
 
 ## Documentation
 
+- `CHANGELOG.md`
 - `docs/v1-scope.md`
 - `docs/architecture.md`
 - `docs/demo-script.md`

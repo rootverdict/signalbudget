@@ -240,3 +240,13 @@ what it does not is set out in `docs/limitations-and-future-work.md`.
 
 Phase numbering in `docs/` continues DetFuzz's sequence; SignalBudget's own work
 begins at phase 8.
+
+## License
+
+MIT. See `LICENSE`.
+
+The committed evidence archive is lab output and carries only neutral
+identifiers — host `DetFuzz-Win11-Lab`, account path `C:\Users\detfuzz-lab`.
+Microsoft Sentinel prices in `pricing/` are retail figures recorded from the
+Azure Retail Prices API on the date stored in the profile; they are reproduced
+as measured input, not as a price list.

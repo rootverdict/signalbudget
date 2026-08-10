@@ -107,19 +107,22 @@ dominated: windows_security_logon
 ```
 
 `pricing_status` is deliberately not pinned here. It is computed at run time from
-`retrieved_at` and `max_age_days` in the pricing profile, so a profile retrieved
-on 2026-07-23 with a 90-day budget reports `PRICING_FRESH` until roughly
-2026-10-21 and `PRICING_STALE` afterwards. A stale profile still produces a full
+the pricing profile's `max_age_days` and the later of its `retrieved_at` and
+`verified_at` dates, so the stored profile — retrieved 2026-07-23, re-verified
+against the Azure Retail Prices API on 2026-08-10 with all three meters
+unchanged — reports `PRICING_FRESH` until roughly 2026-11-08 and
+`PRICING_STALE` afterwards. A stale profile still produces a full
 analysis; the reports simply carry the `PRICING_STALE` label so the estimate is
 never mistaken for current pricing. Pass `--fail-on-stale-pricing` to
 `pareto-analysis` or `explain-tradeoffs` to turn that label into a hard failure
 instead.
 
 Because the status is a run-time value, a committed report is a snapshot of it.
-Both Markdown reports therefore print the profile's `retrieved_at` and
-`max_age_days` beneath the status line, so a reader can date the claim without
-re-running the tool. Those two lines come from the stored profile rather than the
-clock, which is what keeps the committed reports byte-stable for the CI diff.
+Both Markdown reports therefore print the profile's `retrieved_at`,
+`verified_at`, and `max_age_days` beneath the status line, so a reader can date
+the claim without re-running the tool. Those lines come from the stored profile
+rather than the clock, which is what keeps the committed reports byte-stable for
+the CI diff.
 
 `windows_security_logon` is dominated by `powershell_script_block` in this lab
 measurement because both provide one investigation question and zero

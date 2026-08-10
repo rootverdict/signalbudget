@@ -6,7 +6,7 @@ currency: "USD"
 retrieved_at: "2026-07-23T00:00:00Z"
 max_age_days: 90
 source_url: "https://prices.azure.com/api/retail/prices?api-version=2023-01-01-preview"
-verified_at: "2026-07-23T00:00:00Z"
+verified_at: "2026-08-10T00:00:00Z"
 source_note: "Official Azure Retail Prices API. Analytics uses the Microsoft Sentinel simplified-plan ingestion-and-analysis meter; Basic and Auxiliary use Azure Monitor data-ingestion meters. USD retail prices may vary by agreement, currency, taxes, and purchase date."
 meters:
   - meter_name: "Pay-as-you-go Analysis"

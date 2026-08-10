@@ -409,12 +409,14 @@
   "partial_cost_configuration_count": 0,
   "pending_cost": [],
   "pricing": {
-    "age_days": 18,
+    "age_days": 0,
     "fresh": true,
+    "freshness_basis": "verified_at",
     "max_age_days": 90,
     "reason": "PRICING_WITHIN_MAX_AGE",
     "retrieved_at": "2026-07-23T00:00:00Z",
-    "status": "PRICING_FRESH"
+    "status": "PRICING_FRESH",
+    "verified_at": "2026-08-10T00:00:00Z"
   },
   "pricing_status": "PRICING_FRESH",
   "schema_version": "1.0"

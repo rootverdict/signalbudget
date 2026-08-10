@@ -115,6 +115,12 @@ never mistaken for current pricing. Pass `--fail-on-stale-pricing` to
 `pareto-analysis` or `explain-tradeoffs` to turn that label into a hard failure
 instead.
 
+Because the status is a run-time value, a committed report is a snapshot of it.
+Both Markdown reports therefore print the profile's `retrieved_at` and
+`max_age_days` beneath the status line, so a reader can date the claim without
+re-running the tool. Those two lines come from the stored profile rather than the
+clock, which is what keeps the committed reports byte-stable for the CI diff.
+
 `windows_security_logon` is dominated by `powershell_script_block` in this lab
 measurement because both provide one investigation question and zero
 DetFuzz-validated detections, while PowerShell Script Block is cheaper in the

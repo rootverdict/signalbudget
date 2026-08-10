@@ -69,6 +69,16 @@ class TradeoffTests(unittest.TestCase):
         self.assertEqual(report["evidence_caveat"], LAB_ESTIMATE_CAVEAT)
         self.assertIn(LAB_ESTIMATE_CAVEAT, markdown)
 
+    def test_markdown_records_the_profile_behind_the_pricing_status(self) -> None:
+        report = build_tradeoff_report(load_catalog_bundle(project_root()))
+        markdown = render_tradeoff_markdown(report)
+
+        self.assertIn(
+            f"Pricing profile retrieved: `{report['pricing']['retrieved_at']}`",
+            markdown,
+        )
+        self.assertNotIn(f"age_days: {report['pricing']['age_days']}", markdown)
+
 
 if __name__ == "__main__":
     unittest.main()

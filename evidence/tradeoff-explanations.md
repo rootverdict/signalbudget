@@ -1,6 +1,8 @@
 # SignalBudget Tradeoff Explanations
 
 Pricing status: `PRICING_FRESH`
+Pricing profile retrieved: `2026-07-23T00:00:00Z` (max age `90` days)
+Freshness is evaluated when the report is generated, so this file records the status as of its own generation date rather than today's.
 
 ## Evidence Caveat
 

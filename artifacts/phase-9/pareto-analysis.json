@@ -409,7 +409,7 @@
   "partial_cost_configuration_count": 0,
   "pending_cost": [],
   "pricing": {
-    "age_days": 0,
+    "age_days": 18,
     "fresh": true,
     "max_age_days": 90,
     "reason": "PRICING_WITHIN_MAX_AGE",

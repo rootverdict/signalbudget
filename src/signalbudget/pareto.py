@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from signalbudget.freshness import pricing_provenance_lines
+
 
 def analyze_pareto(configurations: list[dict[str, Any]]) -> dict[str, Any]:
     complete_cost = [
@@ -174,6 +176,8 @@ def render_pareto_markdown(analysis: dict[str, Any]) -> str:
     ]
     if "pricing_status" in analysis:
         lines.extend(["", f"Pricing status: `{analysis['pricing_status']}`"])
+        if "pricing" in analysis:
+            lines.extend(pricing_provenance_lines(analysis["pricing"]))
     lines.extend(
         [
             "",

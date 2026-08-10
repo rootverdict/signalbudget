@@ -5,7 +5,7 @@ from typing import Any
 from signalbudget.configurations import enumerate_source_configurations
 from signalbudget.costing import estimate_monthly_source_costs
 from signalbudget.coverage import detection_readiness, investigation_readiness
-from signalbudget.freshness import pricing_freshness
+from signalbudget.freshness import pricing_freshness, pricing_provenance_lines
 from signalbudget.loaders import CatalogBundle
 from signalbudget.pareto import analyze_pareto
 
@@ -165,6 +165,7 @@ def render_tradeoff_markdown(report: dict[str, Any]) -> str:
         "# SignalBudget Tradeoff Explanations",
         "",
         f"Pricing status: `{report['pricing_status']}`",
+        *pricing_provenance_lines(report["pricing"]),
         "",
         "## Evidence Caveat",
         "",

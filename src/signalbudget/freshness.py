@@ -6,6 +6,25 @@ from typing import Any
 PRICING_FRESH = "PRICING_FRESH"
 PRICING_STALE = "PRICING_STALE"
 
+FRESHNESS_IS_EVALUATED_AT_RUN_TIME = (
+    "Freshness is evaluated when the report is generated, so this file records "
+    "the status as of its own generation date rather than today's."
+)
+
+
+def pricing_provenance_lines(freshness: dict[str, object]) -> list[str]:
+    """Render the stable half of the pricing block.
+
+    Deliberately excludes ``age_days``: these lines are diffed against the
+    committed reports in CI, and anything that moves with the calendar would
+    break that check the next day.
+    """
+    return [
+        f"Pricing profile retrieved: `{freshness['retrieved_at']}` "
+        f"(max age `{freshness['max_age_days']}` days)",
+        FRESHNESS_IS_EVALUATED_AT_RUN_TIME,
+    ]
+
 
 def pricing_freshness(
     pricing_profile: dict[str, Any],

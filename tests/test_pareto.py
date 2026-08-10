@@ -101,6 +101,30 @@ class ParetoTests(unittest.TestCase):
         self.assertIn("# SignalBudget Pareto Analysis", markdown)
         self.assertIn("`none`", markdown)
         self.assertNotIn("Pending Cost Configurations", markdown)
+        self.assertNotIn("Pricing status:", markdown)
+
+    def test_pricing_block_records_the_profile_behind_the_status(self) -> None:
+        analysis = {
+            "configuration_count": 0,
+            "complete_cost_configuration_count": 0,
+            "partial_cost_configuration_count": 0,
+            "non_dominated": [],
+            "pending_cost": [],
+            "dominated": [],
+            "cost_boundary": "boundary",
+            "pricing_status": "PRICING_FRESH",
+            "pricing": {
+                "retrieved_at": "2026-07-23T00:00:00Z",
+                "max_age_days": 90,
+                "age_days": 18,
+            },
+        }
+
+        markdown = render_pareto_markdown(analysis)
+
+        self.assertIn("Pricing status: `PRICING_FRESH`", markdown)
+        self.assertIn("Pricing profile retrieved: `2026-07-23T00:00:00Z`", markdown)
+        self.assertNotIn("18", markdown)
 
 
 if __name__ == "__main__":

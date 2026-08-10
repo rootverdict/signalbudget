@@ -23,6 +23,13 @@ source_url
 The filename is only a human-readable anchor. Code must use fields inside the
 profile when checking freshness.
 
+`retrieved_at` and `max_age_days` are also printed under the `Pricing status:`
+line of both generated Markdown reports. A committed report records the status
+as of the moment it was generated, and those two fields are what let a reader
+tell whether that status still holds. They are read from the profile rather than
+the clock, so regenerating the reports on a later date changes only the status
+line itself.
+
 ## Boundary
 
 Prices are Microsoft retail prices in USD. Actual customer charges can differ

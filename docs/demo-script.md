@@ -167,10 +167,12 @@ baseline: none
 frontier transitions in non-decreasing cost order
 ```
 
-If the demo runs more than 90 days after the pricing profile was retrieved, the
-report reads `PRICING_STALE`. That is the intended behaviour, and it is a good
-point to make out loud: the tool labels the age of its own inputs instead of
-presenting an old price as current.
+If the demo runs more than 90 days after the profile was last confirmed current
+— the later of its `retrieved_at` and `verified_at` dates — the report reads
+`PRICING_STALE`. That is the intended behaviour, and it is a good point to make
+out loud: the tool labels the age of its own inputs instead of presenting an old
+price as current, and it distinguishes a stale download from one that has been
+re-checked against the source API.
 
 ## 9. Close With The Honest Boundary
 

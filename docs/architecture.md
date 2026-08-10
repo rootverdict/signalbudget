@@ -43,7 +43,8 @@ Stores 24-hour lab VM volume and byte-size measurements used for cost estimates.
 
 `pricing/microsoft_sentinel_eastus_2026-07-23.yaml`
 
-Stores Microsoft Sentinel pricing and freshness metadata.
+Stores Microsoft Sentinel pricing and freshness metadata. Age is measured from
+the later of the profile's `retrieved_at` and `verified_at` dates.
 
 `src/signalbudget/pareto.py`
 

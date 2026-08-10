@@ -25,11 +25,13 @@ python -m signalbudget.cli explain-tradeoffs --output-dir artifacts\phase-10 --d
 
 ## Current Result
 
-Pricing freshness is evaluated at run time, not pinned in this document. The
-stored profile was retrieved on 2026-07-23 with a 90-day budget, so it reports:
+Pricing freshness is evaluated at run time, not pinned in this document. Age is
+measured from the later of `retrieved_at` and `verified_at`. The stored profile
+was retrieved on 2026-07-23 and re-verified on 2026-08-10 with a 90-day budget,
+so it reports:
 
 ```text
-PRICING_FRESH   until roughly 2026-10-21
+PRICING_FRESH   until roughly 2026-11-08
 PRICING_STALE   afterwards
 ```
 

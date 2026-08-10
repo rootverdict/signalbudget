@@ -45,8 +45,8 @@ The 2026-08-10 check re-queried all three meter IDs and compared `retailPrice`,
 `serviceName`. Every field matched. The Analytics meter that drives the cost
 numbers still carries `effectiveStartDate: 2023-07-01T00:00:00Z`.
 
-`retrieved_at` and `max_age_days` are also printed under the `Pricing status:`
-line of both generated Markdown reports. A committed report records the status
+`retrieved_at`, `verified_at`, and `max_age_days` are also printed under the
+`Pricing status:` line of both generated Markdown reports. A committed report records the status
 as of the moment it was generated, and those two fields are what let a reader
 tell whether that status still holds. They are read from the profile rather than
 the clock, so regenerating the reports on a later date changes only the status

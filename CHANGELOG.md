@@ -2,6 +2,19 @@
 
 Notable changes per release. Dates are ISO-8601.
 
+## Unreleased
+
+Documentation only. No code, catalog, pricing, or report output is affected, so
+the v1.2.0 artifacts remain the current release.
+
+- Corrected the freshness window in four documents that still described age as a
+  function of `retrieved_at` alone. `docs/phase-10-summary.md` was the one that
+  mattered: under a heading reading "Current Result" it pinned `PRICING_FRESH`
+  until 2026-10-21, which the verification date moved to 2026-11-08.
+- Replaced every em and en dash in the prose files with a plain hyphen.
+  `tests/fixtures/` was left untouched; those bytes are pinned by recorded
+  SHA-256 hashes.
+
 ## 1.2.0 - 2026-08-10
 
 ### Changed

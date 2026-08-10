@@ -2,7 +2,7 @@
 
 Notable changes per release. Dates are ISO-8601.
 
-## 1.2.0 — 2026-08-10
+## 1.2.0 - 2026-08-10
 
 ### Changed
 
@@ -20,16 +20,16 @@ Notable changes per release. Dates are ISO-8601.
 ### Data
 
 - All three stored meters re-queried from the Azure Retail Prices API on
-  2026-08-10 and confirmed unchanged — Analytics $4.30/GB, Basic $0.50/GB,
+  2026-08-10 and confirmed unchanged - Analytics $4.30/GB, Basic $0.50/GB,
   Auxiliary $0.05/GB, matching on price, unit, effective date, and meter naming.
   `verified_at` moved to 2026-08-10, which shifts the stale date from
   2026-10-21 to roughly 2026-11-08. No price value changed.
 - `docs/pricing-assumptions.md` gained a verification log and an inventory of
   the 21 eastus Sentinel meters the profile deliberately does not model, most
-  significantly the commitment tiers — which are why the stored pay-as-you-go
+  significantly the commitment tiers - which are why the stored pay-as-you-go
   rate is an upper bound on ingestion cost at fleet scale.
 
-## 1.1.0 — 2026-08-10
+## 1.1.0 - 2026-08-10
 
 Everything below landed on `main` after the `v1.0.0` tag was cut, so the tagged
 1.0.0 archive contains none of it. The tag was left where it is; this release
@@ -59,7 +59,7 @@ supersedes it.
   `zipfile` extracted as literal flat filenames on macOS and Linux. Regenerated
   with portable `/` separators.
 - Stray UTF-8 BOMs removed from seven source and documentation files. The BOMs
-  under `tests/fixtures/` are deliberate — they keep the `utf-8-sig` handling
+  under `tests/fixtures/` are deliberate - they keep the `utf-8-sig` handling
   under test and are pinned by recorded hashes.
 - Documentation pinned `PRICING_FRESH` as though it were permanent. It is
   computed from profile age and flips to `PRICING_STALE` around 2026-10-21.
@@ -70,12 +70,12 @@ supersedes it.
   exported JSON artifacts only, and a test fails the build on any `detfuzz.*`
   import.
 - CI verifies the evidence archive checksum, regenerates both reports from the
-  committed evidence, and diffs them against every committed copy — `artifacts/`
+  committed evidence, and diffs them against every committed copy - `artifacts/`
   and the duplicates under `evidence/`. A further step corrupts an evidence file
   and asserts the validator rejects it.
 - Minimum setuptools raised to 77 for SPDX license metadata.
 
-## 1.0.0 — 2026-07-23
+## 1.0.0 - 2026-07-23
 
 Initial release: three Windows log sources, cost estimates from 24-hour lab VM
 measurements priced against a stored Microsoft Sentinel profile, Pareto analysis

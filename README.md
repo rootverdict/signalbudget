@@ -108,9 +108,9 @@ dominated: windows_security_logon
 
 `pricing_status` is deliberately not pinned here. It is computed at run time from
 the pricing profile's `max_age_days` and the later of its `retrieved_at` and
-`verified_at` dates, so the stored profile — retrieved 2026-07-23, re-verified
+`verified_at` dates, so the stored profile - retrieved 2026-07-23, re-verified
 against the Azure Retail Prices API on 2026-08-10 with all three meters
-unchanged — reports `PRICING_FRESH` until roughly 2026-11-08 and
+unchanged - reports `PRICING_FRESH` until roughly 2026-11-08 and
 `PRICING_STALE` afterwards. A stale profile still produces a full
 analysis; the reports simply carry the `PRICING_STALE` label so the estimate is
 never mistaken for current pricing. Pass `--fail-on-stale-pricing` to
@@ -215,8 +215,8 @@ package, so the installed CLI does not depend on the repository checkout.
 Continuous integration builds a wheel, installs it, and runs the CLI from
 outside the repository to prove that. It then verifies the evidence archive
 checksum, regenerates both reports from the committed evidence, and diffs them
-against every committed copy — `artifacts/` and the duplicates the evidence
-index keeps in `evidence/` — so the published numbers cannot drift from the
+against every committed copy - `artifacts/` and the duplicates the evidence
+index keeps in `evidence/` - so the published numbers cannot drift from the
 evidence that produced them. A final step corrupts an evidence file and asserts
 that validation rejects it.
 
@@ -241,7 +241,7 @@ only the `.zip` and its `.sha256.txt` are tracked.
 
 SignalBudget v1 is complete and reproducible from a fresh clone. The committed
 evidence archive revalidates against its checksum, all 63 evidence files pass
-hash verification, and both reports regenerate from that evidence — CI diffs the
+hash verification, and both reports regenerate from that evidence - CI diffs the
 regenerated Markdown against the committed copies on every push, and separately
 asserts that corrupted evidence is rejected.
 
@@ -257,7 +257,7 @@ begins at phase 8.
 MIT. See `LICENSE`.
 
 The committed evidence archive is lab output and carries only neutral
-identifiers — host `DetFuzz-Win11-Lab`, account path `C:\Users\detfuzz-lab`.
+identifiers - host `DetFuzz-Win11-Lab`, account path `C:\Users\detfuzz-lab`.
 Microsoft Sentinel prices in `pricing/` are retail figures recorded from the
 Azure Retail Prices API on the date stored in the profile; they are reproduced
 as measured input, not as a price list.

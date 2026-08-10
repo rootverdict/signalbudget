@@ -168,7 +168,7 @@ frontier transitions in non-decreasing cost order
 ```
 
 If the demo runs more than 90 days after the profile was last confirmed current
-— the later of its `retrieved_at` and `verified_at` dates — the report reads
+- the later of its `retrieved_at` and `verified_at` dates - the report reads
 `PRICING_STALE`. That is the intended behaviour, and it is a good point to make
 out loud: the tool labels the age of its own inputs instead of presenting an old
 price as current, and it distinguishes a stale download from one that has been

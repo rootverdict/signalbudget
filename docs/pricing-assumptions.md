@@ -30,7 +30,7 @@ current evidence that the stored prices still hold, and the profile should not
 be called stale for the age of its original download alone. `verified_at` is
 optional; without it, age is measured from retrieval.
 
-Re-verification defers staleness by `max_age_days` from the verification date —
+Re-verification defers staleness by `max_age_days` from the verification date -
 it does not make a profile permanently fresh.
 
 ## Verification Log

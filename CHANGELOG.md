@@ -21,6 +21,11 @@ affected, so the v1.2.0 artifacts remain the current release.
   regression tests that keep those claims synchronized across operating systems.
 - CI now compares normalized JSON reports as well as Markdown, excluding only
   the pricing-freshness fields that legitimately change with the run date.
+- Corrected the commitment-tier interpretation in
+  `docs/pricing-assumptions.md` and this changelog. At the committed lab proxy
+  rate, 5,000 endpoints total about 11.7 GB/day, below the 50 GB/day minimum
+  tier; the same-rate threshold is roughly 21,344 endpoints. The ~$18k/year
+  figure is a retail-price illustration, not a guaranteed upper bound.
 
 ## 1.2.0 - 2026-08-10
 
@@ -46,8 +51,9 @@ affected, so the v1.2.0 artifacts remain the current release.
   2026-10-21 to roughly 2026-11-08. No price value changed.
 - `docs/pricing-assumptions.md` gained a verification log and an inventory of
   the 21 eastus Sentinel meters the profile deliberately does not model, most
-  significantly the commitment tiers - which are why the stored pay-as-you-go
-  rate is an upper bound on ingestion cost at fleet scale.
+  significantly the commitment tiers. At the committed lab proxy rate, the
+  5,000-endpoint README example remains below the smallest 50 GB/day tier;
+  commitment pricing becomes relevant only at larger aggregate volumes.
 
 ## 1.1.0 - 2026-08-10
 

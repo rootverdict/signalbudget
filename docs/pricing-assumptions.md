@@ -82,11 +82,18 @@ graph                                   hourly, added 2026-04-01
 free benefit and free trial analysis    zero-rate
 ```
 
-The commitment tiers matter most for interpreting the per-endpoint figures. Any
-fleet large enough for the ~$18k/year framing in the README would be priced on a
-tier rather than pay-as-you-go, and the effective per-gigabyte rate on a tier is
-below the $4.30 pay-as-you-go rate used here. The stored estimate is therefore
-an upper bound on ingestion cost at scale, not a forecast.
+Commitment tiers matter only when aggregate volume is large enough to justify
+their reserved daily capacity. The committed lab proxy totals
+`0.00234259 GB/day` per endpoint, so the 5,000-endpoint example in the README is
+about `11.71295 GB/day`, below the smallest 50 GB/day tier. Linear scaling of the
+same sample reaches 50 GB/day at roughly 21,344 endpoints.
+
+The ~$18k/year pay-as-you-go result is therefore a lab-derived retail-price
+illustration, not a forecast or a guaranteed upper bound. Production volume,
+the difference between XML export size and billable ingestion, customer
+agreements, taxes, currency, and actual tier utilization can move the real bill
+in either direction. Plan selection should use measured aggregate production
+volume rather than endpoint count alone.
 
 ## Current Volume Boundary
 

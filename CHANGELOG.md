@@ -4,8 +4,8 @@ Notable changes per release. Dates are ISO-8601.
 
 ## Unreleased
 
-Documentation only. No code, catalog, pricing, or report output is affected, so
-the v1.2.0 artifacts remain the current release.
+Maintenance only. No runtime package code, catalog, pricing, or report output is
+affected, so the v1.2.0 artifacts remain the current release.
 
 - Corrected the freshness window in four documents that still described age as a
   function of `retrieved_at` alone. `docs/phase-10-summary.md` was the one that
@@ -14,6 +14,13 @@ the v1.2.0 artifacts remain the current release.
 - Replaced every em and en dash in the prose files with a plain hyphen.
   `tests/fixtures/` was left untouched; those bytes are pinned by recorded
   SHA-256 hashes.
+- Removed the calendar dependency from the tradeoff-report pricing-status test,
+  so the suite continues to pass when a correctly aged profile becomes stale.
+- Corrected the evidence archive entry count and generated-report SHA-256 values
+  in `docs/phase-11-vm-validation.md`, with regression tests that keep those
+  claims synchronized with the committed files.
+- CI now compares normalized JSON reports as well as Markdown, excluding only
+  the pricing-freshness fields that legitimately change with the run date.
 
 ## 1.2.0 - 2026-08-10
 

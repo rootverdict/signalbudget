@@ -8,7 +8,7 @@ its DetFuzz input.
 ```text
 evidence/detfuzz-signalbudget-results-20260723-212216-posix.zip
 SHA256 2570ce74dd2d49d4af708b7a1153278c2aa01622e0b6fd1896c0787a3ceb4d4d
-entries: 121
+entries: 162 total (99 files, 63 directories)
 uncompressed bytes: 265658
 unsafe archive paths: 0
 ```
@@ -98,10 +98,10 @@ regenerated from this VM suite:
 
 ```text
 artifacts/phase-9/pareto-analysis.json
-SHA256 b47d5bab826c218802b02c9e18c5654af2f17bf441c1c49ea1e02c2dfb017daf
+SHA256 2d318a50ae53d485f88647f4068a06f91a5139ecd9c6d9d5f9c18502829ea7dd
 
 artifacts/phase-10/tradeoff-explanations.json
-SHA256 1ace22d2886ec5fc885c866402f5f7f2ee9dac5920d8c618596b948a6c3463d3
+SHA256 b5dc8bacf373d0040d23b61dee6facd04ad182c615657cf241c394c67a6d0307
 ```
 
 ## Boundary

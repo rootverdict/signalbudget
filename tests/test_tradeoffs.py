@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from signalbudget.loaders import load_catalog_bundle, project_root
 from signalbudget.tradeoffs import (
@@ -10,10 +11,14 @@ from signalbudget.tradeoffs import (
 
 class TradeoffTests(unittest.TestCase):
     def test_report_surfaces_pricing_status_at_top_level(self) -> None:
-        report = build_tradeoff_report(load_catalog_bundle(project_root()))
+        with patch(
+            "signalbudget.tradeoffs.pricing_freshness",
+            return_value={"status": "PRICING_STALE"},
+        ):
+            report = build_tradeoff_report(load_catalog_bundle(project_root()))
 
-        self.assertEqual(report["pricing_status"], "PRICING_FRESH")
-        self.assertEqual(report["pricing"]["status"], "PRICING_FRESH")
+        self.assertEqual(report["pricing_status"], report["pricing"]["status"])
+        self.assertEqual(report["pricing_status"], "PRICING_STALE")
 
     def test_removing_sysmon_loses_validated_detfuzz_detection(self) -> None:
         report = build_tradeoff_report(load_catalog_bundle(project_root()))

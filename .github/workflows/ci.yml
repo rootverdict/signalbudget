@@ -87,6 +87,52 @@ jobs:
           diff -I '^Pricing status:' \
             build/ci-reports/phase-10/tradeoff-explanations.md \
             evidence/tradeoff-explanations.md
+          python - <<'PY'
+          import difflib
+          import json
+          from pathlib import Path
+
+          pairs = (
+              (
+                  Path("build/ci-reports/phase-9/pareto-analysis.json"),
+                  Path("artifacts/phase-9/pareto-analysis.json"),
+              ),
+              (
+                  Path("build/ci-reports/phase-10/tradeoff-explanations.json"),
+                  Path("artifacts/phase-10/tradeoff-explanations.json"),
+              ),
+          )
+          runtime_pricing_fields = {"age_days", "fresh", "reason", "status"}
+
+          def normalized(path: Path) -> dict[str, object]:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              payload.pop("pricing_status", None)
+              pricing = payload.get("pricing")
+              if isinstance(pricing, dict):
+                  for field in runtime_pricing_fields:
+                      pricing.pop(field, None)
+              return payload
+
+          failed = False
+          for generated_path, committed_path in pairs:
+              generated = json.dumps(normalized(generated_path), indent=2, sort_keys=True)
+              committed = json.dumps(normalized(committed_path), indent=2, sort_keys=True)
+              if generated == committed:
+                  continue
+              failed = True
+              print(
+                  "".join(
+                      difflib.unified_diff(
+                          committed.splitlines(keepends=True),
+                          generated.splitlines(keepends=True),
+                          fromfile=str(committed_path),
+                          tofile=str(generated_path),
+                      )
+                  )
+              )
+          if failed:
+              raise SystemExit("normalized JSON reports differ from committed artifacts")
+          PY
 
       - name: Reject tampered evidence
         env:

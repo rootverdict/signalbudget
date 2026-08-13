@@ -217,8 +217,9 @@ outside the repository to prove that. It then verifies the evidence archive
 checksum, regenerates both reports from the committed evidence, and diffs them
 against every committed copy - `artifacts/` and the duplicates the evidence
 index keeps in `evidence/` - so the published numbers cannot drift from the
-evidence that produced them. A final step corrupts an evidence file and asserts
-that validation rejects it.
+evidence that produced them. The machine-readable JSON reports are also compared
+after removing only run-time pricing-freshness fields. A final step corrupts an
+evidence file and asserts that validation rejects it.
 
 Extracting the evidence archive anywhere under `evidence/` is ignored by git;
 only the `.zip` and its `.sha256.txt` are tracked.

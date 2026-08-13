@@ -35,10 +35,13 @@ class ConfigurationTests(unittest.TestCase):
             by_id["sysmon_process_create"]["cost_status"],
             "ESTIMATED_FROM_24H_LAB_MEASUREMENT",
         )
-        self.assertGreater(
-            by_id["sysmon_process_create"]["estimated_monthly_cost_usd"],
-            0,
-        )
+        # enumerate_source_configurations returns dict[str, object], so the cost
+        # has to be narrowed before it can be compared. Asserting the type is not
+        # just to satisfy the checker: it verifies the cost really is numeric,
+        # which this test previously took on faith.
+        estimated_cost = by_id["sysmon_process_create"]["estimated_monthly_cost_usd"]
+        assert isinstance(estimated_cost, int | float), estimated_cost
+        self.assertGreater(estimated_cost, 0)
         self.assertEqual(
             by_id["sysmon_process_create+powershell_script_block"]["cost_status"],
             "ESTIMATED_FROM_24H_LAB_MEASUREMENT",

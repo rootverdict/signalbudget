@@ -42,7 +42,7 @@ jobs:
         run: python -m ruff check src tests integration_tests
 
       - name: Type-check
-        run: python -m mypy src
+        run: python -m mypy src tests integration_tests
 
       - name: Run exported-evidence contract test
         run: python -m unittest discover -s integration_tests -v

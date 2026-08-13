@@ -47,7 +47,7 @@ class ReleaseMetadataTests(unittest.TestCase):
         for relative_path in report_paths:
             with self.subTest(report=str(relative_path)):
                 self.assertEqual(
-                    _sha256(PROJECT_ROOT / relative_path),
+                    _sha256_lf_normalized_text(PROJECT_ROOT / relative_path),
                     _documented_sha256(document, relative_path),
                 )
 
@@ -76,6 +76,11 @@ def _sha256(path: Path) -> str:
         while chunk := stream.read(1024 * 1024):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _sha256_lf_normalized_text(path: Path) -> str:
+    data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def _is_unsafe_archive_path(value: str) -> bool:

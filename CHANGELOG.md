@@ -16,9 +16,9 @@ affected, so the v1.2.0 artifacts remain the current release.
   SHA-256 hashes.
 - Removed the calendar dependency from the tradeoff-report pricing-status test,
   so the suite continues to pass when a correctly aged profile becomes stale.
-- Corrected the evidence archive entry count and generated-report SHA-256 values
-  in `docs/phase-11-vm-validation.md`, with regression tests that keep those
-  claims synchronized with the committed files.
+- Corrected the evidence archive entry count and canonical LF-normalized
+  generated-report SHA-256 values in `docs/phase-11-vm-validation.md`, with
+  regression tests that keep those claims synchronized across operating systems.
 - CI now compares normalized JSON reports as well as Markdown, excluding only
   the pricing-freshness fields that legitimately change with the run date.
 

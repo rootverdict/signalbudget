@@ -94,14 +94,15 @@ legacy_preliminary_classifications_accepted: M1
 ## Generated Reports
 
 The checked-in reports under `artifacts/phase-9` and `artifacts/phase-10` were
-regenerated from this VM suite:
+regenerated from this VM suite. Their hashes are computed after normalizing text
+line endings to LF, so the values are identical on Windows, macOS, and Linux:
 
 ```text
 artifacts/phase-9/pareto-analysis.json
-SHA256 2d318a50ae53d485f88647f4068a06f91a5139ecd9c6d9d5f9c18502829ea7dd
+SHA256 b3cfb6ac23e2550eafc8d6f52f028018642aee7a6465fa6e23bf9cd78178cbdc
 
 artifacts/phase-10/tradeoff-explanations.json
-SHA256 b5dc8bacf373d0040d23b61dee6facd04ad182c615657cf241c394c67a6d0307
+SHA256 1db17e1cdf122e57a8335e4d557726f0ebc637b120ca6f8da687909f9063052e
 ```
 
 ## Boundary
